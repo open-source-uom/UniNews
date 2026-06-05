@@ -24,7 +24,6 @@ from notifications import should_notify, send_article_notification
 
 ARTICLE_LINK_ROLE = 1000
 
-
 class UniNewsWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -51,9 +50,6 @@ class UniNewsWindow(QMainWindow):
 
         self.apply_theme()
         self.apply_refresh_timer()
-
-        if self.app_settings.get("refresh_on_startup", True):
-            self.refresh_news()
 
     def setup_ui(self):
         self.root = QWidget()
@@ -606,6 +602,3 @@ class UniNewsWindow(QMainWindow):
             self.apply_dark_theme()
         else:
             self.apply_light_theme()
-
-
-
