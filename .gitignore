@@ -1,3 +1,17 @@
+.idea/
+__pycache__
+local_data/
+ui/__pycache__/
+env/
+venv/
+
+# Local Data and Databases
+data/
+*.db
+*.sqlite3
+*.csv
+*.json
+
 # C++ objects and libs
 *.slo
 *.lo
