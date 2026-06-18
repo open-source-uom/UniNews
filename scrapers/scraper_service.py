@@ -1,8 +1,9 @@
 from scrapers.uom_scraper import UomNewsScraper
-
+from scrapers.uowm_scraper import UowmNewsScraper
 
 SCRAPER_REGISTRY = {
     "uom_news": UomNewsScraper,
+    "uowm_news": UowmNewsScraper,
 }
 
 
