@@ -1,7 +1,7 @@
 import json
 
 from PyQt6.QtCore import Qt, QTimer, QUrl
-from PyQt6.QtGui import QDesktopServices, QPixmap
+from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtWidgets import (
     QComboBox,
     QFrame,
@@ -296,16 +296,6 @@ class UniNewsWindow(QMainWindow):
         self.search_text = text.strip()
         self.current_page = 1
         self.load_filtered_articles()
-
-    def load_filtered_articles(self):
-        self.articles = self.database.get_articles(
-            university=self.selected_university,
-            source=self.selected_source,
-            search_text=self.search_text,
-            limit=500,
-        )
-
-        self.render_articles()
 
     def create_sidebar(self):
         self.sidebar = QFrame()
