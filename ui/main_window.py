@@ -33,7 +33,7 @@ class UniNewsWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("UniNews")
-        icon_path = Path(__file__).resolve().parent.parent / "data" / "assets" / "UniNewsIcon.png"
+        icon_path = Path(__file__).resolve().parent.parent / "data" / "assets" / "UniNewsIcon.jpeg"
         self.setWindowIcon(QIcon(str(icon_path)))
         self.resize(1050, 720)
 
