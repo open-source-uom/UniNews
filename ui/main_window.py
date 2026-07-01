@@ -100,7 +100,7 @@ class UniNewsWindow(QMainWindow):
         }}
 
         QWidget {{
-            font-family: "Segoe UI", "Inter", "Arial";
+            font-family: "Noto Sans", "Inter", "Arial";
             color: {text};
         }}
 
@@ -228,8 +228,7 @@ class UniNewsWindow(QMainWindow):
                     color: {muted};
                     font-size: 13px;
                     font-weight: 650;
-                    font-family: "Segoe UI", "Inter", "Arial";
-                }}
+                    font-family: "Noto Sans", "Inter", "Arial";                }}
 
                 #PaginationButton,
                 #PageButton {{
@@ -240,8 +239,7 @@ class UniNewsWindow(QMainWindow):
                     padding: 8px 14px;
                     font-size: 13px;
                     font-weight: 750;
-                    font-family: "Segoe UI", "Inter", "Arial";
-                }}
+                    font-family: "Noto Sans", "Inter", "Arial";                }}
 
                 #PaginationButton:hover,
                 #PageButton:hover {{
@@ -263,8 +261,7 @@ class UniNewsWindow(QMainWindow):
                     padding: 8px 14px;
                     font-size: 13px;
                     font-weight: 850;
-                    font-family: "Segoe UI", "Inter", "Arial";
-                }}
+                    font-family: "Noto Sans", "Inter", "Arial";                }}
 
                 #PaginationDots {{
                     color: {muted};
@@ -272,8 +269,7 @@ class UniNewsWindow(QMainWindow):
                     font-weight: 700;
                     padding-left: 4px;
                     padding-right: 4px;
-                    font-family: "Segoe UI", "Inter", "Arial";
-                }}
+                    font-family: "Noto Sans", "Inter", "Arial";                }}
 
                 #PaginationSize {{
                     background-color: {panel_2};
@@ -283,8 +279,7 @@ class UniNewsWindow(QMainWindow):
                     padding: 8px 30px 8px 12px;
                     font-size: 13px;
                     font-weight: 750;
-                    font-family: "Segoe UI", "Inter", "Arial";
-                }}
+                    font-family: "Noto Sans", "Inter", "Arial";                }}
 
                 #PaginationSize:hover {{
                     background-color: {card_hover};
@@ -487,8 +482,7 @@ class UniNewsWindow(QMainWindow):
             }
 
             QWidget {
-                font-family: "Segoe UI", "Inter", "Arial";
-                color: #1F2937;
+                font-family: "Noto Sans", "Inter", "Arial";                color: #1F2937;
             }
 
             #HeaderCard {
@@ -786,8 +780,7 @@ class UniNewsWindow(QMainWindow):
             }
 
             QWidget {
-                font-family: "Segoe UI", "Inter", "Arial";
-                color: #F8FAFC;
+                font-family: "Noto Sans", "Inter", "Arial";                color: #F8FAFC;
             }
 
             #HeaderCard {
