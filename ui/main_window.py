@@ -217,6 +217,101 @@ class UniNewsWindow(QMainWindow):
             color: white;
             font-weight: 800;
         }}
+
+                #PaginationBar {{
+                    background-color: {panel};
+                    border: 1px solid {border};
+                    border-radius: 18px;
+                }}
+
+                #PaginationSummary {{
+                    color: {muted};
+                    font-size: 13px;
+                    font-weight: 650;
+                    font-family: "Segoe UI", "Inter", "Arial";
+                }}
+
+                #PaginationButton,
+                #PageButton {{
+                    background-color: {panel_2};
+                    color: {text};
+                    border: 1px solid {border};
+                    border-radius: 11px;
+                    padding: 8px 14px;
+                    font-size: 13px;
+                    font-weight: 750;
+                    font-family: "Segoe UI", "Inter", "Arial";
+                }}
+
+                #PaginationButton:hover,
+                #PageButton:hover {{
+                    background-color: {card_hover};
+                    border: 1px solid {accent};
+                }}
+
+                #PaginationButton:disabled {{
+                    background-color: {panel_2};
+                    color: {muted};
+                    border: 1px solid {border};
+                }}
+
+                #PageButtonActive {{
+                    background-color: {accent};
+                    color: white;
+                    border: none;
+                    border-radius: 11px;
+                    padding: 8px 14px;
+                    font-size: 13px;
+                    font-weight: 850;
+                    font-family: "Segoe UI", "Inter", "Arial";
+                }}
+
+                #PaginationDots {{
+                    color: {muted};
+                    font-size: 13px;
+                    font-weight: 700;
+                    padding-left: 4px;
+                    padding-right: 4px;
+                    font-family: "Segoe UI", "Inter", "Arial";
+                }}
+
+                #PaginationSize {{
+                    background-color: {panel_2};
+                    color: {text};
+                    border: 1px solid {border};
+                    border-radius: 11px;
+                    padding: 8px 30px 8px 12px;
+                    font-size: 13px;
+                    font-weight: 750;
+                    font-family: "Segoe UI", "Inter", "Arial";
+                }}
+
+                #PaginationSize:hover {{
+                    background-color: {card_hover};
+                    border: 1px solid {accent};
+                }}
+
+                #PaginationSize::drop-down {{
+                    border: none;
+                    width: 26px;
+                }}
+
+                #PaginationSize::down-arrow {{
+                    image: none;
+                    width: 0px;
+                    height: 0px;
+                }}
+
+                #PaginationSize QAbstractItemView {{
+                    background-color: {panel};
+                    color: {text};
+                    border: 1px solid {border};
+                    border-radius: 10px;
+                    selection-background-color: {accent};
+                    selection-color: white;
+                    padding: 4px;
+                    outline: none;
+                }}
         """
 
     def setup_ui(self):
