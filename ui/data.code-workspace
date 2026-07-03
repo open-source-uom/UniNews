@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../data"
+		},
+		{
+			"path": "../local_data"
+		},
+		{
+			"path": "../__pycache__"
+		},
+		{
+			"path": "../scrapers"
+		},
+		{
+			"path": "."
+		}
+	]
+}
