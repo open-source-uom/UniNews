@@ -1,3 +1,10 @@
+ui/__pycache__/
+__pycache__/
+scrapers/__pycache__/
+.idea/UniNews.iml/
+local_data/
+scrapers/__pycache__/__init__.cpython-310.pyc
+
 # C++ objects and libs
 *.slo
 *.lo
@@ -77,3 +84,10 @@ ENV/
 .venv
 pip-log.txt
 pip-delete-this-directory.txt
+
+# Runtime data
+.local_data/
+
+# OS files
+.DS_Store
+Thumbs.db
