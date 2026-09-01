@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 from PyQt6.QtCore import Qt, QUrl
 from PyQt6.QtWidgets import (
@@ -13,7 +14,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget, QScrollArea, QLineEdit,
 )
-from PyQt6.QtGui import QDesktopServices, QPixmap
+from PyQt6.QtGui import QDesktopServices, QPixmap, QIcon
 
 from database import Database
 from settings import FEEDS_FILE
@@ -33,6 +34,9 @@ class UniNewsWindow(QMainWindow):
 
         self.setWindowTitle("UniNews")
         self.resize(1050, 720)
+        
+        window_icon_path = Path(__file__).resolve().parent.parent / "data" / "assets" / "UniNewsIcon.jpeg"
+        self.setWindowIcon(QIcon(str(window_icon_path)))
 
         self.settings_button = QPushButton("Settings")
         self.settings_button.clicked.connect(self.open_settings)
