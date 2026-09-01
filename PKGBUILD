@@ -1,3 +1,4 @@
+# Maintainer: Artemis Dara
 # PKGBUILD for uninews
 pkgname=uninews
 _pkgname=UniNews # github name
@@ -6,7 +7,7 @@ pkgrel=1
 pkgdesc="A small desktop application that brings together news and announcements from universities into a single place."
 arch=('any')
 url="https://github.com/open-source-uom/UniNews.git"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=(
 	'python'
 	'python-beautifulsoup4'
@@ -63,4 +64,4 @@ package() {
   install -Dm644 README.md "$pkgdir/usr/share/doc/$_pkgname/README.md" 2>/dev/null || true
 
 }
-# written by Artemis Dara
+

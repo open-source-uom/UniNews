@@ -91,3 +91,9 @@ pip-delete-this-directory.txt
 # OS files
 .DS_Store
 Thumbs.db
+
+# PKGBUILD extra files
+UniNews/
+pkg/
+src/
+
