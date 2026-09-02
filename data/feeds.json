@@ -8,5 +8,10 @@
     "name": "University of Macedonia",
     "type": "scraper",
     "scraper": "uom_news"
+  },
+  {
+    "name": "University of Western Macedonia",
+    "type": "scraper",
+    "scraper": "uowm_news"
   }
 ]
