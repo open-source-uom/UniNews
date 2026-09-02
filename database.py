@@ -20,36 +20,16 @@ class Database:
     def create_tables(self) -> None:
         self.connection.execute(
             """
-            CREATE TABLE IF NOT EXISTS articles
-            (
-                id
-                INTEGER
-                PRIMARY
-                KEY
-                AUTOINCREMENT,
-                university
-                TEXT
-                NOT
-                NULL,
-                title
-                TEXT
-                NOT
-                NULL,
-                summary
-                TEXT,
-                link
-                TEXT
-                NOT
-                NULL
-                UNIQUE,
-                published
-                TEXT,
-                fetched_at
-                TEXT
-                NOT
-                NULL,
-                image_url
-                TEXT
+            CREATE TABLE IF NOT EXISTS articles (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                university TEXT NOT NULL,
+                source TEXT,
+                title TEXT NOT NULL,
+                summary TEXT,
+                link TEXT NOT NULL UNIQUE,
+                published TEXT,
+                fetched_at TEXT NOT NULL,
+                image_url TEXT
             );
             """
         )
@@ -69,8 +49,7 @@ class Database:
 
     def save_article(self, article: dict) -> None:
         query = """
-                INSERT \
-                OR IGNORE INTO articles (
+        INSERT OR IGNORE INTO articles (
             university,
             source,
             title,
@@ -80,8 +59,8 @@ class Database:
             fetched_at,
             image_url
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?); \
-                """
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+        """
 
         self.connection.execute(
             query,
@@ -103,103 +82,132 @@ class Database:
         for article in articles:
             self.save_article(article)
 
-    def get_articles(
-            self,
-            university=None,
-            source=None,
-            search_text=None,
-            limit: int = 500,
-    ) -> list[dict]:
-        query = """
-                SELECT
-                    id,
-                    university,
-                    source,
-                    title,
-                    summary,
-                    link,
-                    published,
-                    fetched_at,
-                    image_url
-                FROM articles
-                WHERE 1 = 1 \
-                """
-
+    def build_article_filters(
+        self,
+        university=None,
+        source=None,
+        search_text=None,
+    ) -> tuple[str, list]:
+        filters = ["1 = 1"]
         params = []
 
         if university and university != "All":
-            query += " AND university = ?"
+            filters.append("university = ?")
             params.append(university)
 
         if source and source != "All":
-            query += " AND source = ?"
+            filters.append("source = ?")
             params.append(source)
 
-        if university and university != "All":
-            query += " AND university = ?"
-            params.append(university)
-
         if search_text:
-            query += """
-            AND (
-                title LIKE ?
-                OR summary LIKE ?
-                OR university LIKE ?
+            filters.append(
+                """
+                (
+                    title LIKE ?
+                    OR summary LIKE ?
+                    OR university LIKE ?
+                    OR source LIKE ?
+                )
+                """
             )
-            """
             search_pattern = f"%{search_text}%"
-            params.extend([search_pattern, search_pattern, search_pattern])
+            params.extend(
+                [
+                    search_pattern,
+                    search_pattern,
+                    search_pattern,
+                    search_pattern,
+                ]
+            )
 
-        query += """
+        return " AND ".join(filters), params
+
+    def get_articles(
+        self,
+        university=None,
+        source=None,
+        search_text=None,
+        limit: int = 12,
+        offset: int = 0,
+    ) -> list[dict]:
+        where_clause, params = self.build_article_filters(
+            university=university,
+            source=source,
+            search_text=search_text,
+        )
+
+        query = f"""
+        SELECT
+            id,
+            university,
+            source,
+            title,
+            summary,
+            link,
+            published,
+            fetched_at,
+            image_url
+        FROM articles
+        WHERE {where_clause}
         ORDER BY id DESC
         LIMIT ?
+        OFFSET ?;
         """
 
-        params.append(limit)
+        params.extend([limit, offset])
 
         cursor = self.connection.execute(query, params)
         rows = cursor.fetchall()
 
         return [dict(row) for row in rows]
 
+    def count_articles(
+        self,
+        university=None,
+        source=None,
+        search_text=None,
+    ) -> int:
+        where_clause, params = self.build_article_filters(
+            university=university,
+            source=source,
+            search_text=search_text,
+        )
+
+        query = f"""
+        SELECT COUNT(*) AS total
+        FROM articles
+        WHERE {where_clause};
+        """
+
+        cursor = self.connection.execute(query, params)
+        row = cursor.fetchone()
+
+        return row["total"] if row else 0
+
     def delete_all_articles(self) -> None:
         self.connection.execute("DELETE FROM articles;")
         self.connection.commit()
 
-    def close(self) -> None:
-        self.connection.close()
-
     def enforce_article_limit(self, max_articles: int) -> None:
         query = """
-                DELETE \
-                FROM articles
-                WHERE id NOT IN (SELECT id \
-                                 FROM articles \
-                                 ORDER BY id DESC
-                    LIMIT ?
-                    ); \
-                """
+        DELETE FROM articles
+        WHERE id NOT IN (
+            SELECT id
+            FROM articles
+            ORDER BY id DESC
+            LIMIT ?
+        );
+        """
 
         self.connection.execute(query, (max_articles,))
         self.connection.commit()
 
-    def load_cached_articles(self):
-        try:
-            self.articles = self.database.get_articles()
-        except Exception as error:
-            print(f"Could not load cached articles: {error}")
-            self.articles = []
-            self.selected_university = "All"
-            self.search_text = ""
-
-        self.render_articles()
-
     def get_universities(self) -> list[str]:
         query = """
-                SELECT DISTINCT university
-                FROM articles
-                ORDER BY university ASC; 
-                """
+        SELECT DISTINCT university
+        FROM articles
+        ORDER BY university ASC;
+        """
 
         cursor = self.connection.execute(query)
         rows = cursor.fetchall()
@@ -218,3 +226,6 @@ class Database:
         )
 
         return [row["source"] for row in cursor.fetchall() if row["source"]]
+
+    def close(self) -> None:
+        self.connection.close()
