@@ -1,7 +1,5 @@
-# Maintainer: Artemis Dara
-# PKGBUILD for uninews
 pkgname=uninews
-_pkgname=UniNews # github name
+_pkgname=UniNews 
 pkgver=0.1.0
 pkgrel=1
 pkgdesc="A small desktop application that brings together news and announcements from universities into a single place."
@@ -28,18 +26,14 @@ makedepends=('python-setuptools' 'git' 'python-pip')
 source=("git+https://github.com/open-source-uom/UniNews.git")
 sha256sums=('SKIP')
 
-
 prepare() {
-  # moves to src directory
   cd "$srcdir/"
   
 }
 
-
 pkgver() {
   cd "$srcdir/$_pkgname" || return 1
   local version=$(git describe --long --tags 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')
-  # check if the version is valid
   if [ -z "$version" ]; then
     echo "0.1.0"
   else
@@ -56,10 +50,8 @@ package() {
   cd "$srcdir/$_pkgname"
   python setup.py install --root="$pkgdir" --optimize=1
   
-  # installing plyer
   pip install --root="$pkgdir" --no-deps plyer
   
-  # installing documentation
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE" 2>/dev/null || true
   install -Dm644 README.md "$pkgdir/usr/share/doc/$_pkgname/README.md" 2>/dev/null || true
 
