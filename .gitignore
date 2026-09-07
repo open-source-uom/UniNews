@@ -80,3 +80,10 @@ venv/
 # OS files
 .DS_Store
 Thumbs.db
+
+# makepkg
+src/
+pkg/
+*.pkg.tar.zst
+*.pkg.tar.xz
+UniNews/
