@@ -22,13 +22,15 @@ depends=(
 	'python-typing_extensions'
 	'python-urllib3'
 ) 
-makedepends=('python-setuptools' 'git' 'python-pip')
+makedepends=('python-setuptools'
+             'git'
+             'python-pip'
+)
 source=("git+https://github.com/open-source-uom/UniNews.git")
 sha256sums=('SKIP')
 
 prepare() {
-  cd "$srcdir/"
-  
+  cd "$srcdir/" 
 }
 
 pkgver() {
@@ -48,12 +50,37 @@ build() {
 
 package() {
   cd "$srcdir/$_pkgname"
+
   python setup.py install --root="$pkgdir" --optimize=1
   
   pip install --root="$pkgdir" --no-deps plyer
   
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE" 2>/dev/null || true
   install -Dm644 README.md "$pkgdir/usr/share/doc/$_pkgname/README.md" 2>/dev/null || true
+  install -d "$pkgdir/usr/share/applications"
+  install -d "$pkgdir/usr/share/pixmaps"
+  install -d "$pkgdir/usr/share/icons/hicolor/128x128/apps"
 
+  if [ -f "$srcdir/$_pkgname/resources/uninews-logo.png" ]; then
+    install -Dm644 "$srcdir/$_pkgname/resources/uninews-logo.png" "$pkgdir/usr/share/pixmaps/uninews.png"
+    install -Dm644 "$srcdir/$_pkgname/resources/uninews-logo.png" "$pkgdir/usr/share/icons/hicolor/128x128/apps/uninews.png"
+    ICON="uninews"
+  else
+    ICON="system-help"
+  fi
+
+  cat << EOF > "$pkgdir/usr/share/applications/uninews.desktop"
+
+[Desktop Entry]
+Type=Application
+Name=UniNews
+GenericName=University News Reader
+Exec=uninews
+Icon=$ICON
+Terminal=false
+StartupNotify=true
+StartupWMClass=UniNews
+Categories=News;Network;Qt;
+EOF
 }
 
