@@ -1,0 +1,144 @@
+{
+  "university": "University of Western Macedonia",
+  "default_max_pages": 3,
+  "sources": [
+    {
+      "label": "UoWM Main News",
+      "base_url": "https://www.uowm.gr",
+      "first_page": "https://www.uowm.gr/en/news/",
+      "item_selector": ".post-list-item",
+      "title_selector": "h4.post-title a, .post-title a",
+      "date_selector": ".post-date span, .post-date",
+      "summary_selector": ".post-item-excerpt"
+    },
+    {
+      "label": "UoWM Electrical and Computer Engineering",
+      "base_url": "https://ece.uowm.gr",
+      "first_page": "https://ece.uowm.gr/%ce%b3%ce%b5%ce%bd%ce%b9%ce%ba%ce%b5%cf%83-%ce%b1%ce%bd%ce%b1%ce%ba%ce%bf%ce%b9%ce%bd%cf%89%cf%83%ce%b5%ce%b9%cf%83/",
+      "item_selector": ".rt-list-item",
+      "title_selector": "h3.entry-title a.tpg-post-link, .entry-title a",
+      "date_selector": ".post-meta-tags .date a, .date",
+      "summary_selector": ".tpg-excerpt-inner"
+    },
+    {
+      "label": "UoWM Chemical Engineering",
+      "base_url": "https://chemeng.uowm.gr",
+      "first_page": "https://chemeng.uowm.gr/enimerosi/",
+      "item_selector": "article.type-post, article.post",
+      "title_selector": "h3 a, h2 a, .entry-title a",
+      "date_selector": ".date, .entry-date, time, .posted-on",
+      "summary_selector": ".entry-summary, .entry-content, p"
+    },
+    {
+      "label": "UoWM Mineral Resources Engineering",
+      "base_url": "https://mre.uowm.gr",
+      "first_page": "https://mre.uowm.gr/en/category/announcements/",
+      "item_selector": ".post.type-post, .type-post",
+      "title_selector": "h2 a, .entry-title a",
+      "date_selector": ".entry-meta, .entry-date, time",
+      "summary_selector": ".entry-summary, .entry-content"
+    },
+    {
+      "label": "UoWM Product and Systems Design Engineering - First Years",
+      "base_url": "https://ide.uowm.gr",
+      "first_page": "https://ide.uowm.gr/category/protoeteis_25/",
+      "item_selector": "article.type-post, article.post",
+      "title_selector": "h2 a, .entry-title a",
+      "date_selector": "time, .entry-date, .posted-on",
+      "summary_selector": ".entry-summary, .entry-content"
+    },
+    {
+      "label": "UoWM Product and Systems Design Engineering - News",
+      "base_url": "https://ide.uowm.gr",
+      "first_page": "https://ide.uowm.gr/en/category/news/",
+      "item_selector": "article.type-post, article.post",
+      "title_selector": "h2 a, .entry-title a",
+      "date_selector": "time, .entry-date, .posted-on",
+      "summary_selector": ".entry-summary, .entry-content"
+    },
+    {
+      "label": "UoWM Early Childhood Education",
+      "base_url": "https://nured.uowm.gr",
+      "first_page": "https://nured.uowm.gr/news/",
+      "item_selector": "article.type-post, article.post",
+      "title_selector": "h2 a, .entry-title a",
+      "date_selector": "time, .entry-date, .posted-on",
+      "summary_selector": ".entry-summary, .entry-content"
+    },
+    {
+      "label": "UoWM Computer Science",
+      "base_url": "https://cs.uowm.gr",
+      "first_page": "https://cs.uowm.gr/en/home-page/",
+      "item_selector": ".latest-news-item",
+      "title_selector": ".latest-news-title a, h3 a",
+      "date_selector": ".latest-news-date, time, .posted-on",
+      "summary_selector": ".latest-news-text-content p, .latest-news-excerpt",
+      "max_pages": 1
+    },
+    {
+      "label": "UoWM Agriculture",
+      "base_url": "https://agro.uowm.gr",
+      "first_page": "https://agro.uowm.gr/home/",
+      "item_selector": ".uael-post-wrapper",
+      "title_selector": ".uael-post__title a, h5 a",
+      "date_selector": ".uael-post__date, .uael-post__meta-data, time",
+      "summary_selector": ".uael-post__excerpt, .uael-post__content-wrap",
+      "max_pages": 1
+    },
+    {
+      "label": "UoWM Regional and Cross-Border Development",
+      "base_url": "https://rdcbs.uowm.gr",
+      "first_page": "https://rdcbs.uowm.gr/nea/",
+      "item_selector": "article.post-list-item, .post-list-item",
+      "title_selector": "h3 a, .post-title a",
+      "date_selector": ".post-date, time",
+      "summary_selector": ".post-excerpt, .entry-summary, p"
+    },
+    {
+      "label": "UoWM International and European Economic Studies",
+      "base_url": "https://iees.uowm.gr",
+      "first_page": "https://iees.uowm.gr/category/anakoinoseis/",
+      "item_selector": ".post.type-post, .type-post",
+      "title_selector": "h2 a, .entry-title a",
+      "date_selector": ".entry-meta, .entry-date, time",
+      "summary_selector": ".entry-summary, .entry-content"
+    },
+    {
+      "label": "UoWM Business Administration",
+      "base_url": "https://ba.uowm.gr",
+      "first_page": "https://ba.uowm.gr/category/anakoinoseis/",
+      "item_selector": "article.type-post, article.post",
+      "title_selector": "h3 a, h2 a, .entry-title a",
+      "date_selector": ".post-date, .entry-date, time",
+      "summary_selector": ".entry-summary, .entry-content, p"
+    },
+    {
+      "label": "UoWM Applied and Fine Arts",
+      "base_url": "https://eetf.uowm.gr",
+      "first_page": "https://eetf.uowm.gr/en/category/news/",
+      "item_selector": ".news-mini-wrap.type-post, .news-mini-wrap",
+      "title_selector": "h1 a, h2 a, .entry-title a",
+      "date_selector": "time, .news-meta",
+      "summary_selector": ".news-summary, .entry-summary, .entry-content"
+    },
+    {
+      "label": "UoWM Occupational Therapy",
+      "base_url": "https://ot.uowm.gr",
+      "first_page": "https://ot.uowm.gr/",
+      "item_selector": "#left-sidebar .widget_text h3",
+      "title_selector": "a",
+      "date_selector": "",
+      "summary_selector": "",
+      "max_pages": 1
+    },
+    {
+      "label": "UoWM Midwifery",
+      "base_url": "https://mw.uowm.gr",
+      "first_page": "https://mw.uowm.gr/category/genikes-anakoinoseis/",
+      "item_selector": "article.type-post, article.post",
+      "title_selector": "h2 a, .entry-title a",
+      "date_selector": "time, .entry-date, .posted-on",
+      "summary_selector": ".entry-summary, .entry-content"
+    }
+  ]
+}
