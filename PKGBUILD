@@ -1,8 +1,8 @@
 pkgname=uninews
-_pkgname=UniNews 
+_pkgname=UniNews
 pkgver=0.1.0
 pkgrel=1
-pkgdesc="A small desktop application that brings together news and announcements from universities into a single place."
+pkgdesc="A desktop application that brings together news and announcements from universities into a single place."
 arch=('any')
 url="https://github.com/open-source-uom/UniNews.git"
 license=('GPL-3.0-or-later')
@@ -21,14 +21,14 @@ depends=(
 	'python-soupsieve'
 	'python-typing_extensions'
 	'python-urllib3'
-) 
+)
 makedepends=('python-setuptools' 'git' 'python-pip')
 source=("git+https://github.com/open-source-uom/UniNews.git")
 sha256sums=('SKIP')
 
 prepare() {
   cd "$srcdir/"
-  
+
 }
 
 pkgver() {
@@ -49,11 +49,10 @@ build() {
 package() {
   cd "$srcdir/$_pkgname"
   python setup.py install --root="$pkgdir" --optimize=1
-  
+
   pip install --root="$pkgdir" --no-deps plyer
-  
+
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE" 2>/dev/null || true
   install -Dm644 README.md "$pkgdir/usr/share/doc/$_pkgname/README.md" 2>/dev/null || true
 
 }
-
