@@ -2,7 +2,6 @@ import json
 
 from settings import APP_DATA_DIR
 
-
 SETTINGS_FILE = APP_DATA_DIR / "settings.json"
 
 
@@ -13,6 +12,7 @@ DEFAULT_SETTINGS = {
     "notification_keywords": ["deadline", "scholarship", "application", "exam"],
     "theme": "light",
     "max_cached_articles": 500,
+    "custom_rss_feeds": [],
 }
 
 

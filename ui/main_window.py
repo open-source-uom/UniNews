@@ -1,28 +1,30 @@
 import json
 
-from PyQt6.QtCore import Qt, QUrl
+from PyQt6.QtCore import Qt, QTimer, QUrl
+from PyQt6.QtGui import QDesktopServices, QPixmap
 from PyQt6.QtWidgets import (
     QFrame,
     QHBoxLayout,
+    QInputDialog,
     QLabel,
+    QLineEdit,
     QListWidget,
     QListWidgetItem,
     QMainWindow,
     QMessageBox,
     QPushButton,
+    QScrollArea,
     QVBoxLayout,
-    QWidget, QScrollArea, QLineEdit,
+    QWidget,
 )
-from PyQt6.QtGui import QDesktopServices, QPixmap
 
+from app_settings import load_app_settings, save_app_settings
 from database import Database
-from settings import FEEDS_FILE
+from feed_config import get_all_feeds
+from notifications import send_article_notification, should_notify
 from rss_service import fetch_feed
-from ui.settings_dialog import SettingsDialog
-from app_settings import load_app_settings
-from PyQt6.QtCore import QTimer
-from notifications import should_notify, send_article_notification
 from scrapers.scraper_service import run_scraper
+from ui.settings_dialog import SettingsDialog
 
 ARTICLE_LINK_ROLE = 1000
 
@@ -34,15 +36,11 @@ class UniNewsWindow(QMainWindow):
         self.setWindowTitle("UniNews")
         self.resize(1050, 720)
 
-        self.settings_button = QPushButton("Settings")
-        self.settings_button.clicked.connect(self.open_settings)
-
         self.database = Database()
         self.articles = []
         self.selected_university = "All"
         self.selected_source = "All"
         self.search_text = ""
-
 
         self.app_settings = load_app_settings()
         self.setup_ui()
@@ -238,7 +236,9 @@ class UniNewsWindow(QMainWindow):
         self.source_list.clear()
 
         all_item = QListWidgetItem("All")
-        all_item.setData(Qt.ItemDataRole.UserRole, {"university": "All", "source": "All"})
+        all_item.setData(
+            Qt.ItemDataRole.UserRole, {"university": "All", "source": "All"}
+        )
         self.source_list.addItem(all_item)
 
         universities = self.database.get_universities()
@@ -334,17 +334,22 @@ class UniNewsWindow(QMainWindow):
         title_area.addWidget(self.title_label)
         title_area.addWidget(self.subtitle_label)
 
-        self.refresh_button = QPushButton("Refresh news")
-        self.refresh_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.refresh_button.setObjectName("RefreshButton")
-        self.refresh_button.clicked.connect(self.refresh_news)
+        self.add_rss_button = QPushButton("Add RSS")
+        self.add_rss_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.add_rss_button.clicked.connect(self.open_add_rss_dialog)
 
         self.settings_button = QPushButton("Settings")
         self.settings_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.settings_button.clicked.connect(self.open_settings)
 
+        self.refresh_button = QPushButton("Refresh news")
+        self.refresh_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.refresh_button.setObjectName("RefreshButton")
+        self.refresh_button.clicked.connect(self.refresh_news)
+
         header_layout.addLayout(title_area)
         header_layout.addStretch()
+        header_layout.addWidget(self.add_rss_button)
         header_layout.addWidget(self.settings_button)
         header_layout.addWidget(self.refresh_button)
 
@@ -517,19 +522,19 @@ class UniNewsWindow(QMainWindow):
             QScrollBar::sub-line:vertical {
                 height: 0px;
             }
-            
+
             #Sidebar {
                 background-color: #FFFFFF;
                 border: 1px solid #E6DDF3;
                 border-radius: 22px;
             }
-            
+
             #SidebarTitle {
                 color: #171124;
                 font-size: 18px;
                 font-weight: 900;
             }
-            
+
             #SearchInput {
                 background-color: #F9F5FF;
                 color: #171124;
@@ -538,28 +543,28 @@ class UniNewsWindow(QMainWindow):
                 padding: 9px 12px;
                 font-size: 13px;
             }
-            
+
             #SearchInput:focus {
                 border: 1px solid #A855F7;
             }
-            
+
             #SourceList {
                 background-color: transparent;
                 border: none;
                 outline: none;
             }
-            
+
             #SourceList::item {
                 color: #4B5563;
                 padding: 10px 12px;
                 border-radius: 10px;
             }
-            
+
             #SourceList::item:hover {
                 background-color: #F3E8FF;
                 color: #171124;
             }
-            
+
             #SourceList::item:selected {
                 background-color: #A855F7;
                 color: white;
@@ -579,13 +584,13 @@ class UniNewsWindow(QMainWindow):
                 border: 1px solid #1E293B;
                 border-radius: 22px;
             }
-            
+
             #SidebarTitle {
                 color: #FFFFFF;
                 font-size: 18px;
                 font-weight: 900;
             }
-            
+
             #SearchInput {
                 background-color: #111827;
                 color: #F8FAFC;
@@ -594,28 +599,28 @@ class UniNewsWindow(QMainWindow):
                 padding: 9px 12px;
                 font-size: 13px;
             }
-            
+
             #SearchInput:focus {
                 border: 1px solid #C084FC;
             }
-            
+
             #SourceList {
                 background-color: transparent;
                 border: none;
                 outline: none;
             }
-            
+
             #SourceList::item {
                 color: #CBD5E1;
                 padding: 10px 12px;
                 border-radius: 10px;
             }
-            
+
             #SourceList::item:hover {
                 background-color: #1E293B;
                 color: #FFFFFF;
             }
-            
+
             #SourceList::item:selected {
                 background-color: #C084FC;
                 color: #080A14;
@@ -754,15 +759,7 @@ class UniNewsWindow(QMainWindow):
 
     def load_feeds(self) -> list[dict]:
         try:
-            with open(FEEDS_FILE, "r", encoding="utf-8") as file:
-                return json.load(file)
-        except FileNotFoundError:
-            QMessageBox.critical(
-                self,
-                "Missing feeds file",
-                f"Could not find:\n{FEEDS_FILE}",
-            )
-            return []
+            return get_all_feeds(self.app_settings)
         except json.JSONDecodeError as error:
             QMessageBox.critical(
                 self,
@@ -782,7 +779,6 @@ class UniNewsWindow(QMainWindow):
         for feed in feeds:
             university_name = feed.get("name", "Unknown university")
             feed_url = feed.get("url", "")
-
 
             try:
                 source_type = feed.get("type", "rss")
@@ -914,7 +910,9 @@ class UniNewsWindow(QMainWindow):
 
     def open_settings(self):
         dialog = SettingsDialog(self)
-        dialog.setStyleSheet(self.get_theme_stylesheet(self.app_settings.get("theme", "light")))
+        dialog.setStyleSheet(
+            self.get_theme_stylesheet(self.app_settings.get("theme", "light"))
+        )
 
         if dialog.exec():
             self.app_settings = load_app_settings()
@@ -956,4 +954,60 @@ class UniNewsWindow(QMainWindow):
             bg = "#080A14" if theme == "dark" else "#F4F0FA"
             self.article_container.setStyleSheet(f"background-color: {bg};")
 
+    def open_add_rss_dialog(self):
+        name, ok = QInputDialog.getText(
+            self,
+            "Add RSS feed",
+            "Feed name:",
+        )
 
+        if not ok or not name.strip():
+            return
+
+        url, ok = QInputDialog.getText(
+            self,
+            "Add RSS feed",
+            "RSS URL:",
+        )
+
+        if not ok or not url.strip():
+            return
+
+        name = name.strip()
+        url = url.strip()
+
+        if not url.startswith(("http://", "https://")):
+            QMessageBox.warning(
+                self,
+                "Invalid URL",
+                "The RSS URL must start with http:// or https://",
+            )
+            return
+
+        custom_feeds = self.app_settings.setdefault("custom_rss_feeds", [])
+
+        if any(feed.get("url") == url for feed in custom_feeds):
+            QMessageBox.information(
+                self,
+                "RSS already exists",
+                "This RSS feed has already been added.",
+            )
+            return
+
+        custom_feeds.append(
+            {
+                "name": name,
+                "type": "rss",
+                "url": url,
+            }
+        )
+
+        save_app_settings(self.app_settings)
+
+        QMessageBox.information(
+            self,
+            "RSS added",
+            f"{name} was added successfully.",
+        )
+
+        self.refresh_news()
