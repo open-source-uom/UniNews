@@ -1,28 +1,30 @@
 import json
 
-from PyQt6.QtCore import Qt, QUrl
+from PyQt6.QtCore import Qt, QTimer, QUrl
+from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtWidgets import (
+    QComboBox,
     QFrame,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QListWidget,
     QListWidgetItem,
     QMainWindow,
     QMessageBox,
     QPushButton,
+    QScrollArea,
     QVBoxLayout,
-    QWidget, QScrollArea, QLineEdit,
+    QWidget,
 )
-from PyQt6.QtGui import QDesktopServices, QPixmap
 
-from database import Database
-from settings import FEEDS_FILE
-from rss_service import fetch_feed
-from ui.settings_dialog import SettingsDialog
 from app_settings import load_app_settings
-from PyQt6.QtCore import QTimer
-from notifications import should_notify, send_article_notification
+from database import Database
+from notifications import send_article_notification, should_notify
+from rss_service import fetch_feed
 from scrapers.scraper_service import run_scraper
+from settings import FEEDS_FILE
+from ui.settings_dialog import SettingsDialog
 
 ARTICLE_LINK_ROLE = 1000
 
@@ -43,6 +45,10 @@ class UniNewsWindow(QMainWindow):
         self.selected_source = "All"
         self.search_text = ""
 
+        self.current_page = 1
+        self.page_size = 12
+        self.total_articles = 0
+        self.total_pages = 1
 
         self.app_settings = load_app_settings()
         self.setup_ui()
@@ -94,7 +100,7 @@ class UniNewsWindow(QMainWindow):
         }}
 
         QWidget {{
-            font-family: "Segoe UI", "Inter", "Arial";
+            font-family: "Noto Sans", "Inter", "Arial";
             color: {text};
         }}
 
@@ -211,6 +217,96 @@ class UniNewsWindow(QMainWindow):
             color: white;
             font-weight: 800;
         }}
+
+                #PaginationBar {{
+                    background-color: {panel};
+                    border: 1px solid {border};
+                    border-radius: 18px;
+                }}
+
+                #PaginationSummary {{
+                    color: {muted};
+                    font-size: 13px;
+                    font-weight: 650;
+                    font-family: "Noto Sans", "Inter", "Arial";                }}
+
+                #PaginationButton,
+                #PageButton {{
+                    background-color: {panel_2};
+                    color: {text};
+                    border: 1px solid {border};
+                    border-radius: 11px;
+                    padding: 8px 14px;
+                    font-size: 13px;
+                    font-weight: 750;
+                    font-family: "Noto Sans", "Inter", "Arial";                }}
+
+                #PaginationButton:hover,
+                #PageButton:hover {{
+                    background-color: {card_hover};
+                    border: 1px solid {accent};
+                }}
+
+                #PaginationButton:disabled {{
+                    background-color: {panel_2};
+                    color: {muted};
+                    border: 1px solid {border};
+                }}
+
+                #PageButtonActive {{
+                    background-color: {accent};
+                    color: white;
+                    border: none;
+                    border-radius: 11px;
+                    padding: 8px 14px;
+                    font-size: 13px;
+                    font-weight: 850;
+                    font-family: "Noto Sans", "Inter", "Arial";                }}
+
+                #PaginationDots {{
+                    color: {muted};
+                    font-size: 13px;
+                    font-weight: 700;
+                    padding-left: 4px;
+                    padding-right: 4px;
+                    font-family: "Noto Sans", "Inter", "Arial";                }}
+
+                #PaginationSize {{
+                    background-color: {panel_2};
+                    color: {text};
+                    border: 1px solid {border};
+                    border-radius: 11px;
+                    padding: 8px 30px 8px 12px;
+                    font-size: 13px;
+                    font-weight: 750;
+                    font-family: "Noto Sans", "Inter", "Arial";                }}
+
+                #PaginationSize:hover {{
+                    background-color: {card_hover};
+                    border: 1px solid {accent};
+                }}
+
+                #PaginationSize::drop-down {{
+                    border: none;
+                    width: 26px;
+                }}
+
+                #PaginationSize::down-arrow {{
+                    image: none;
+                    width: 0px;
+                    height: 0px;
+                }}
+
+                #PaginationSize QAbstractItemView {{
+                    background-color: {panel};
+                    color: {text};
+                    border: 1px solid {border};
+                    border-radius: 10px;
+                    selection-background-color: {accent};
+                    selection-color: white;
+                    padding: 4px;
+                    outline: none;
+                }}
         """
 
     def setup_ui(self):
@@ -226,9 +322,18 @@ class UniNewsWindow(QMainWindow):
 
         self.create_sidebar()
         self.create_article_list()
+        self.create_pagination_bar()
+
+        self.article_area = QWidget()
+        self.article_area_layout = QVBoxLayout(self.article_area)
+        self.article_area_layout.setContentsMargins(0, 0, 0, 0)
+        self.article_area_layout.setSpacing(12)
+
+        self.article_area_layout.addWidget(self.scroll_area, stretch=1)
+        self.article_area_layout.addWidget(self.pagination_bar)
 
         self.content_layout.addWidget(self.sidebar)
-        self.content_layout.addWidget(self.scroll_area, stretch=1)
+        self.content_layout.addWidget(self.article_area, stretch=1)
 
         self.root_layout.addLayout(self.content_layout)
 
@@ -238,7 +343,9 @@ class UniNewsWindow(QMainWindow):
         self.source_list.clear()
 
         all_item = QListWidgetItem("All")
-        all_item.setData(Qt.ItemDataRole.UserRole, {"university": "All", "source": "All"})
+        all_item.setData(
+            Qt.ItemDataRole.UserRole, {"university": "All", "source": "All"}
+        )
         self.source_list.addItem(all_item)
 
         universities = self.database.get_universities()
@@ -272,21 +379,13 @@ class UniNewsWindow(QMainWindow):
         self.selected_university = data.get("university", "All")
         self.selected_source = data.get("source", "All")
 
+        self.current_page = 1
         self.load_filtered_articles()
 
     def on_search_changed(self, text: str):
         self.search_text = text.strip()
+        self.current_page = 1
         self.load_filtered_articles()
-
-    def load_filtered_articles(self):
-        self.articles = self.database.get_articles(
-            university=self.selected_university,
-            source=self.selected_source,
-            search_text=self.search_text,
-            limit=500,
-        )
-
-        self.render_articles()
 
     def create_sidebar(self):
         self.sidebar = QFrame()
@@ -383,8 +482,7 @@ class UniNewsWindow(QMainWindow):
             }
 
             QWidget {
-                font-family: "Segoe UI", "Inter", "Arial";
-                color: #1F2937;
+                font-family: "Noto Sans", "Inter", "Arial";                color: #1F2937;
             }
 
             #HeaderCard {
@@ -517,19 +615,19 @@ class UniNewsWindow(QMainWindow):
             QScrollBar::sub-line:vertical {
                 height: 0px;
             }
-            
+
             #Sidebar {
                 background-color: #FFFFFF;
                 border: 1px solid #E6DDF3;
                 border-radius: 22px;
             }
-            
+
             #SidebarTitle {
                 color: #171124;
                 font-size: 18px;
                 font-weight: 900;
             }
-            
+
             #SearchInput {
                 background-color: #F9F5FF;
                 color: #171124;
@@ -538,32 +636,88 @@ class UniNewsWindow(QMainWindow):
                 padding: 9px 12px;
                 font-size: 13px;
             }
-            
+
             #SearchInput:focus {
                 border: 1px solid #A855F7;
             }
-            
+
             #SourceList {
                 background-color: transparent;
                 border: none;
                 outline: none;
             }
-            
+
             #SourceList::item {
                 color: #4B5563;
                 padding: 10px 12px;
                 border-radius: 10px;
             }
-            
+
             #SourceList::item:hover {
                 background-color: #F3E8FF;
                 color: #171124;
             }
-            
+
             #SourceList::item:selected {
                 background-color: #A855F7;
                 color: white;
                 font-weight: 800;
+            }
+
+            #PaginationBar {
+                background-color: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 16px;
+            }
+
+            #PaginationSummary {
+                color: #64748b;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            #PaginationButton,
+            #PageButton {
+                background-color: #f8fafc;
+                color: #334155;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 7px 12px;
+                font-weight: 600;
+            }
+
+            #PaginationButton:hover,
+            #PageButton:hover {
+                background-color: #eef2ff;
+                color: #1e293b;
+            }
+
+            #PaginationButton:disabled {
+                background-color: #f1f5f9;
+                color: #94a3b8;
+            }
+
+            #PageButtonActive {
+                background-color: #111827;
+                color: #ffffff;
+                border: 1px solid #111827;
+                border-radius: 10px;
+                padding: 7px 12px;
+                font-weight: 700;
+            }
+
+            #PaginationDots {
+                color: #94a3b8;
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+
+            #PaginationSize {
+                background-color: #f8fafc;
+                color: #334155;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 6px 10px;
             }
             """
         )
@@ -579,13 +733,13 @@ class UniNewsWindow(QMainWindow):
                 border: 1px solid #1E293B;
                 border-radius: 22px;
             }
-            
+
             #SidebarTitle {
                 color: #FFFFFF;
                 font-size: 18px;
                 font-weight: 900;
             }
-            
+
             #SearchInput {
                 background-color: #111827;
                 color: #F8FAFC;
@@ -594,28 +748,28 @@ class UniNewsWindow(QMainWindow):
                 padding: 9px 12px;
                 font-size: 13px;
             }
-            
+
             #SearchInput:focus {
                 border: 1px solid #C084FC;
             }
-            
+
             #SourceList {
                 background-color: transparent;
                 border: none;
                 outline: none;
             }
-            
+
             #SourceList::item {
                 color: #CBD5E1;
                 padding: 10px 12px;
                 border-radius: 10px;
             }
-            
+
             #SourceList::item:hover {
                 background-color: #1E293B;
                 color: #FFFFFF;
             }
-            
+
             #SourceList::item:selected {
                 background-color: #C084FC;
                 color: #080A14;
@@ -626,8 +780,7 @@ class UniNewsWindow(QMainWindow):
             }
 
             QWidget {
-                font-family: "Segoe UI", "Inter", "Arial";
-                color: #F8FAFC;
+                font-family: "Noto Sans", "Inter", "Arial";                color: #F8FAFC;
             }
 
             #HeaderCard {
@@ -783,7 +936,6 @@ class UniNewsWindow(QMainWindow):
             university_name = feed.get("name", "Unknown university")
             feed_url = feed.get("url", "")
 
-
             try:
                 source_type = feed.get("type", "rss")
 
@@ -808,6 +960,7 @@ class UniNewsWindow(QMainWindow):
 
     def load_cached_articles(self):
         self.update_source_list()
+        self.current_page = 1
         self.load_filtered_articles()
 
     def open_article(self, item: QListWidgetItem):
@@ -914,7 +1067,9 @@ class UniNewsWindow(QMainWindow):
 
     def open_settings(self):
         dialog = SettingsDialog(self)
-        dialog.setStyleSheet(self.get_theme_stylesheet(self.app_settings.get("theme", "light")))
+        dialog.setStyleSheet(
+            self.get_theme_stylesheet(self.app_settings.get("theme", "light"))
+        )
 
         if dialog.exec():
             self.app_settings = load_app_settings()
@@ -956,4 +1111,166 @@ class UniNewsWindow(QMainWindow):
             bg = "#080A14" if theme == "dark" else "#F4F0FA"
             self.article_container.setStyleSheet(f"background-color: {bg};")
 
+    def create_pagination_bar(self):
+        self.pagination_bar = QFrame()
+        self.pagination_bar.setObjectName("PaginationBar")
 
+        pagination_layout = QHBoxLayout(self.pagination_bar)
+        pagination_layout.setContentsMargins(12, 8, 12, 8)
+        pagination_layout.setSpacing(8)
+
+        self.page_summary_label = QLabel()
+        self.page_summary_label.setObjectName("PaginationSummary")
+
+        self.pagination_prev_button = QPushButton("‹ Previous")
+        self.pagination_prev_button.setObjectName("PaginationButton")
+        self.pagination_prev_button.clicked.connect(self.go_to_previous_page)
+
+        self.page_buttons_layout = QHBoxLayout()
+        self.page_buttons_layout.setSpacing(6)
+
+        self.pagination_next_button = QPushButton("Next ›")
+        self.pagination_next_button.setObjectName("PaginationButton")
+        self.pagination_next_button.clicked.connect(self.go_to_next_page)
+
+        self.page_size_combo = QComboBox()
+        self.page_size_combo.setObjectName("PaginationSize")
+
+        for size in [10, 12, 20, 30, 50]:
+            self.page_size_combo.addItem(f"{size} / page", size)
+
+        self.page_size_combo.setCurrentIndex(1)
+        self.page_size_combo.currentIndexChanged.connect(self.on_page_size_changed)
+
+        pagination_layout.addWidget(self.page_summary_label)
+        pagination_layout.addStretch()
+        pagination_layout.addWidget(self.pagination_prev_button)
+        pagination_layout.addLayout(self.page_buttons_layout)
+        pagination_layout.addWidget(self.pagination_next_button)
+        pagination_layout.addSpacing(8)
+        pagination_layout.addWidget(self.page_size_combo)
+
+    def load_filtered_articles(self):
+        self.total_articles = self.database.count_articles(
+            university=self.selected_university,
+            source=self.selected_source,
+            search_text=self.search_text,
+        )
+
+        self.total_pages = max(
+            1,
+            (self.total_articles + self.page_size - 1) // self.page_size,
+        )
+
+        if self.current_page > self.total_pages:
+            self.current_page = self.total_pages
+
+        offset = (self.current_page - 1) * self.page_size
+
+        self.articles = self.database.get_articles(
+            university=self.selected_university,
+            source=self.selected_source,
+            search_text=self.search_text,
+            limit=self.page_size,
+            offset=offset,
+        )
+
+        self.render_articles()
+        self.update_pagination_controls()
+
+    def update_pagination_controls(self):
+        self.clear_pagination_page_buttons()
+
+        if self.total_articles == 0:
+            self.pagination_bar.setVisible(False)
+            return
+
+        self.pagination_bar.setVisible(True)
+
+        first_article = (self.current_page - 1) * self.page_size + 1
+        last_article = min(
+            self.current_page * self.page_size,
+            self.total_articles,
+        )
+
+        self.page_summary_label.setText(
+            f"Showing {first_article}-{last_article} of {self.total_articles}"
+        )
+
+        self.pagination_prev_button.setEnabled(self.current_page > 1)
+        self.pagination_next_button.setEnabled(self.current_page < self.total_pages)
+
+        for page in self.get_visible_page_numbers():
+            if page == "...":
+                label = QLabel("...")
+                label.setObjectName("PaginationDots")
+                label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                self.page_buttons_layout.addWidget(label)
+                continue
+
+            button = QPushButton(str(page))
+
+            if page == self.current_page:
+                button.setObjectName("PageButtonActive")
+                button.setEnabled(False)
+            else:
+                button.setObjectName("PageButton")
+                button.clicked.connect(
+                    lambda checked=False, selected_page=page: self.go_to_page(
+                        selected_page
+                    )
+                )
+
+            self.page_buttons_layout.addWidget(button)
+
+    def get_visible_page_numbers(self) -> list:
+        if self.total_pages <= 7:
+            return list(range(1, self.total_pages + 1))
+
+        pages = [1]
+
+        start_page = max(2, self.current_page - 1)
+        end_page = min(self.total_pages - 1, self.current_page + 1)
+
+        if start_page > 2:
+            pages.append("...")
+
+        for page in range(start_page, end_page + 1):
+            pages.append(page)
+
+        if end_page < self.total_pages - 1:
+            pages.append("...")
+
+        pages.append(self.total_pages)
+
+        return pages
+
+    def clear_pagination_page_buttons(self):
+        while self.page_buttons_layout.count():
+            item = self.page_buttons_layout.takeAt(0)
+            widget = item.widget()
+
+            if widget:
+                widget.deleteLater()
+
+    def go_to_page(self, page: int):
+        if page < 1 or page > self.total_pages:
+            return
+
+        if page == self.current_page:
+            return
+
+        self.current_page = page
+        self.load_filtered_articles()
+        self.scroll_area.verticalScrollBar().setValue(0)
+
+    def go_to_previous_page(self):
+        self.go_to_page(self.current_page - 1)
+
+    def go_to_next_page(self):
+        self.go_to_page(self.current_page + 1)
+
+    def on_page_size_changed(self):
+        self.page_size = self.page_size_combo.currentData()
+        self.current_page = 1
+        self.load_filtered_articles()
