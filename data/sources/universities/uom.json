@@ -1,0 +1,22 @@
+{
+  "publisher": "University of Macedonia",
+  "category": "university",
+  "defaults": {
+    "type": "html",
+    "item_selector": "article.post-news.post-news-wide",
+    "title_selector": "h6 a",
+    "date_selector": ".post-news-meta span.small",
+    "page_url": "{url}?pn={page}"
+  },
+  "sources": [
+    { "label": "UoM Main News", "url": "https://www.uom.gr/nea", "pages": 2 },
+    { "label": "UoM Economics", "url": "https://www.uom.gr/eco/ta-teleytaia-nea-toy-tmhmatos" },
+    { "label": "UoM Balkan, Slavic & Oriental Studies", "url": "https://www.uom.gr/bso/ta-nea-mas" },
+    { "label": "UoM Applied Informatics", "url": "https://www.uom.gr/dai/ta-nea-toy-tmhmatos" },
+    { "label": "UoM Business Administration", "url": "https://www.uom.gr/ba/enhmerosh" },
+    { "label": "UoM Accounting & Finance", "url": "https://www.uom.gr/fin/enhmerosh" },
+    { "label": "UoM International & European Studies", "url": "https://www.uom.gr/ies/ta-teleytaia-nea-toy-tmhmatos" },
+    { "label": "UoM Music Science & Art", "url": "https://www.uom.gr/msa/enhmerosh" },
+    { "label": "UoM Educational & Social Policy", "url": "https://www.uom.gr/esp/ta-nea-mas" }
+  ]
+}
