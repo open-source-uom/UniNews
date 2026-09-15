@@ -1,82 +1,70 @@
-ui/__pycache__/
-__pycache__/
-scrapers/__pycache__/
-.idea/UniNews.iml/
-local_data/
-scrapers/__pycache__/__init__.cpython-310.pyc
 
-# C++ objects and libs
-*.slo
-*.lo
-*.o
 *.a
+*.autosave
+*build-*
+# C++ objects and libs
+CMakeLists.txt.user*
+compile_commands.json
+*creator.user*
+debian/.debhelper/
+debian/debhelper-build-stamp
+debian/files
+debian/*.substvars
+debian/uninews/
+dist/
+*.dll
+.DS_Store
+*.dylib
+.idea/
+.idea/UniNews.iml/
+# IDEs
+*.jsc
 *.la
 *.lai
-*.so
-*.so.*
-*.dll
-*.dylib
-
-# Qt-es
-object_script.*.Release
-object_script.*.Debug
-*_plugin_import.cpp
-/.qmake.cache
-/.qmake.stash
-*.pro.user
-*.pro.user.*
-*.qbs.user
-*.qbs.user.*
+*.lo
+local_data/
+Makefile*
 *.moc
 moc_*.cpp
 moc_*.h
-qrc_*.cpp
-ui_*.h
-*.qmlc
-*.jsc
-Makefile*
-*build-*
-build/
-*.qm
+*.o
+object_script.*.Debug
+object_script.*.Release
+# OS files
+*_plugin_import.cpp
 *.prl
-*.qmlls.ini
-
-# Qt unit tests
-target_wrapper.*
-
-# QtCreator
-*.autosave
-
-# QtCreator Qml
-*.qmlproject.user
-*.qmlproject.user.*
-
-# QtCreator CMake
-CMakeLists.txt.user*
-
-# QtCreator 4.8< compilation database
-compile_commands.json
-
-# QtCreator local machine specific files for imported projects
-*creator.user*
-
-*_qmlcache.qrc
-
-# Python
+*.pro.user
+.pybuild/
 __pycache__/
 *.py[cod]
-
-# Virtual environments
-.venv/
-venv/
-
-# IDEs
-.idea/
-.vscode/
-
+.pytest_cache/
+# Python
+*.qbs.user
+*.qm
+/.qmake.cache
+/.qmake.stash
+*.qmlc
+*_qmlcache.qrc
+*.qmlls.ini
+*.qmlproject.user
+qrc_*.cpp
+# QtCreator
+# QtCreator 4.8< compilation database
+# QtCreator CMake
+# QtCreator local machine specific files for imported projects
+# QtCreator Qml
+# Qt-es
+# Qt unit tests
 # Runtime data
-.local_data/
-
-# OS files
-.DS_Store
+scrapers/__pycache__/
+scrapers/__pycache__/__init__.cpython-310.pyc
+*.slo
+*.so
+src/*.egg-info/
+target_wrapper.*
 Thumbs.db
+ui_*.h
+ui/__pycache__/
+.venv/
+# Virtual environments
+.vscode/

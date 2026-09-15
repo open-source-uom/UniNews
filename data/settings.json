@@ -1,7 +1,0 @@
-{
-  "refresh_interval_minutes": 30,
-  "notifications_enabled": true,
-  "notification_keywords": ["scholarship", "deadline", "exam", "application"],
-  "theme": "light",
-  "max_cached_articles": 500
-}

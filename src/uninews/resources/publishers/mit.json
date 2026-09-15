@@ -1,0 +1,7 @@
+{
+  "publisher": "MIT",
+  "category": "university",
+  "sources": [
+    { "label": "MIT News", "type": "rss", "url": "https://news.mit.edu/rss/feed" }
+  ]
+}

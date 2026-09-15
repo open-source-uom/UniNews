@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=UniNews
+Comment=University news in one place
+Exec=uninews
+Icon=uninews
+Terminal=false
+Categories=Network;News;Education;
+Keywords=university;news;announcements;rss;
+StartupWMClass=UniNews

@@ -1,0 +1,20 @@
+Source: uninews
+Section: net
+Priority: optional
+Maintainer: George Apostolidis <your@email.com>
+Build-Depends: debhelper-compat (= 13), dh-python, pybuild-plugin-pyproject,
+               python3-all, python3-setuptools
+Standards-Version: 4.6.2
+Homepage: https://github.com/open-source-uom/UniNews
+
+Package: uninews
+Architecture: all
+Depends: ${python3:Depends},
+         ${misc:Depends},
+         python3-pyqt6,
+         python3-requests,
+         python3-bs4,
+         python3-feedparser
+Description: University news in one place
+ Collects announcements from Greek and international universities
+ into a single desktop app, with search, filtering and notifications.

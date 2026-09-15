@@ -1,58 +1,40 @@
+# Maintainer: George Apostolidis <your@email>
 pkgname=uninews
-_pkgname=UniNews
-pkgver=0.1.0
+pkgver=0.2.0
 pkgrel=1
-pkgdesc="A desktop application that brings together news and announcements from universities into a single place."
+pkgdesc="University news from Greek and international universities in one place"
 arch=('any')
-url="https://github.com/open-source-uom/UniNews.git"
-license=('GPL-3.0-or-later')
+url="https://github.com/open-source-uom/UniNews"
+license=('GPL3')
 depends=(
-	'python'
-	'python-beautifulsoup4'
-	'python-certifi'
-	'python-charset-normalizer'
-	'python-decorator'
-	'python-feedparser'
-	'python-idna'
-	'python-markdown'
-	'python-pyqt6'
-	'python-requests'
-	'python-sgmllib3k'
-	'python-soupsieve'
-	'python-typing_extensions'
-	'python-urllib3'
+  'python'
+  'python-pyqt6'
+  'python-requests'
+  'python-beautifulsoup4'
+  'python-feedparser'
 )
-makedepends=('python-setuptools' 'git' 'python-pip')
-source=("git+https://github.com/open-source-uom/UniNews.git")
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
+checkdepends=('python-pytest')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('SKIP')
 
-prepare() {
-  cd "$srcdir/"
-
-}
-
-pkgver() {
-  cd "$srcdir/$_pkgname" || return 1
-  local version=$(git describe --long --tags 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')
-  if [ -z "$version" ]; then
-    echo "0.1.0"
-  else
-    echo "$version"
-  fi
-}
-
 build() {
-  cd "$srcdir/$_pkgname"
-  python setup.py build
+  cd "UniNews-$pkgver"
+  python -m build --wheel --no-isolation
+}
+
+check() {
+  cd "UniNews-$pkgver"
+  PYTHONPATH="src" QT_QPA_PLATFORM=offscreen pytest -q
 }
 
 package() {
-  cd "$srcdir/$_pkgname"
-  python setup.py install --root="$pkgdir" --optimize=1
+  cd "UniNews-$pkgver"
+  python -m installer --destdir="$pkgdir" dist/*.whl
 
-  pip install --root="$pkgdir" --no-deps plyer
-
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE" 2>/dev/null || true
-  install -Dm644 README.md "$pkgdir/usr/share/doc/$_pkgname/README.md" 2>/dev/null || true
-
+  install -Dm644 packaging/uninews.desktop \
+    "$pkgdir/usr/share/applications/uninews.desktop"
+  install -Dm644 packaging/uninews.svg \
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/uninews.svg"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
