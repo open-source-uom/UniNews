@@ -7,6 +7,7 @@ import sqlite3
 from collections.abc import Iterable
 from dataclasses import astuple, fields
 from pathlib import Path
+from typing import Self
 
 from uninews.article import Article
 from uninews.text import fold
@@ -59,7 +60,7 @@ class Database:
         self.connection.row_factory = sqlite3.Row
         self._create_or_check_schema()
 
-    def __enter__(self) -> "Database":
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *exc_info) -> None:
@@ -126,6 +127,7 @@ class Database:
 
     def get_articles(
         self,
+        *,
         category: str | None = None,
         publisher: str | None = None,
         source: str | None = None,
@@ -151,6 +153,7 @@ class Database:
 
     def count_articles(
         self,
+        *,
         category: str | None = None,
         publisher: str | None = None,
         source: str | None = None,
@@ -226,7 +229,7 @@ def sort_key(article: Article, known_sources: set[tuple[str, str]]) -> str:
 
 
 def search_text(article: Article) -> str:
-    return fold(" ".join((article.title, article.summary, article.publisher, article.source)))
+    return fold(f"{article.title} {article.summary} {article.publisher} {article.source}")
 
 
 def build_where(

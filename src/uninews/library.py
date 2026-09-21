@@ -6,8 +6,8 @@ database for that page. No Qt here, so it can be tested on its own.
 
 from dataclasses import dataclass, replace
 
-from uninews.database import Database
 from uninews.article import Article
+from uninews.database import Database
 
 PAGE_SIZES = (10, 12, 20, 30, 50)
 

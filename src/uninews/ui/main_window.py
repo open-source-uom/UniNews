@@ -19,11 +19,12 @@ from PyQt6.QtWidgets import (
 
 from uninews import config
 from uninews.database import Database
-from uninews.library import Library
 from uninews.fetchers import load_fetchers
+from uninews.library import Library
 from uninews.ui.article_list import ArticleList
-from uninews.ui.fetch_worker import FetchWorker, FetchResult
+from uninews.ui.fetch_worker import FetchResult, FetchWorker
 from uninews.ui.pagination import Pagination
+from uninews.ui.settings_dialog import SettingsDialog
 from uninews.ui.sidebar import Sidebar
 from uninews.ui.theme import stylesheet
 
@@ -247,8 +248,6 @@ class UniNewsWindow(QMainWindow):
     # --- settings ---------------------------------------------------------
 
     def open_settings(self) -> None:
-        from uninews.ui.settings_dialog import SettingsDialog
-
         dialog = SettingsDialog(self.settings, self)
 
         if dialog.exec():

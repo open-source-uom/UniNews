@@ -42,8 +42,12 @@ disable = [
     "too-few-public-methods",
     "too-many-instance-attributes",
     "invalid-name",               # Qt overrides: closeEvent, mousePressEvent
-    "broad-exception-caught",     # deliberate: one failing site must not stop the rest
+    "broad-exception-caught",
+    "attribute-defined-outside-init",   # Qt: widgets built in helpers called from __init__     # deliberate: one failing site must not stop the rest
 ]
+
+[tool.pylint.design]
+max-args = 7
 
 [tool.pylint.format]
 max-line-length = 100

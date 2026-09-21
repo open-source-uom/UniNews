@@ -6,9 +6,10 @@ from urllib.parse import urljoin
 
 import requests
 
-from uninews.dates import parse_date
 from uninews.article import Article
+from uninews.dates import parse_date
 from uninews.text import clean_text
+
 
 class FetcherError(Exception):
     """A source could not deliver articles, with a reason a person can act on."""

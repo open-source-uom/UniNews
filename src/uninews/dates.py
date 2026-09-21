@@ -5,7 +5,7 @@ dates without one are kept as written.
 """
 
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
 
 from uninews.text import fold
@@ -21,9 +21,12 @@ MONTH_PREFIXES = {
     "ιουλ": 7, "αυγ": 8, "σεπ": 9, "οκτ": 10, "νοε": 11, "δεκ": 12,
 }
 
-NUMERIC_DATE = re.compile(r"\b(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})\b")        # 06/10/2025
-DAY_MONTH_YEAR = re.compile(r"\b(\d{1,2})\s+([^\W\d_]{3,})\.?,?\s+(\d{4})\b")  # 10 Σεπτεμβρίου, 2026
-MONTH_DAY_YEAR = re.compile(r"\b([^\W\d_]{3,})\.?\s+(\d{1,2}),?\s+(\d{4})\b")  # September 10, 2026
+# e.g. 06/10/2025
+NUMERIC_DATE = re.compile(r"\b(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})\b")
+# e.g. 10 Σεπτεμβρίου, 2026
+DAY_MONTH_YEAR = re.compile(r"\b(\d{1,2})\s+([^\W\d_]{3,})\.?,?\s+(\d{4})\b")
+# e.g. September 10, 2026
+MONTH_DAY_YEAR = re.compile(r"\b([^\W\d_]{3,})\.?\s+(\d{1,2}),?\s+(\d{4})\b")
 TIME = re.compile(r"\b(\d{1,2}):(\d{2})(?::(\d{2}))?\b")
 
 
@@ -44,12 +47,12 @@ def parse_date(text: str | None) -> str | None:
 
 
 def now_sortable() -> str:
-    return to_sortable(datetime.now(timezone.utc))
+    return to_sortable(datetime.now(UTC))
 
 
 def to_sortable(value: datetime) -> str:
     if value.tzinfo is not None:
-        value = value.astimezone(timezone.utc).replace(tzinfo=None)
+        value = value.astimezone(UTC).replace(tzinfo=None)
     return value.strftime(SORTABLE_FORMAT)
 
 
@@ -113,6 +116,7 @@ def _build(year: int, month: int, day: int, text: str) -> datetime | None:
         second = int(time_match[3] or 0)
 
     try:
-        return datetime(year, month, day, hour, minute, second)
+        # Naive on purpose: sites give local dates with no timezone.
+        return datetime(year, month, day, hour, minute, second)  # noqa: DTZ001
     except ValueError:
         return None

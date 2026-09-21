@@ -8,10 +8,11 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from urllib.parse import urlsplit
 
+import requests
 from PyQt6.QtCore import QThread, pyqtSignal
 
-from uninews.fetchers.base import Fetcher
 from uninews.article import Article
+from uninews.fetchers.base import Fetcher
 
 MAX_PARALLEL_SITES = 6
 
@@ -76,7 +77,7 @@ class FetchWorker(QThread):
     def fetch_one(self, fetcher: Fetcher) -> FetchResult:
         try:
             return FetchResult(fetcher, fetcher.fetch())
-        except Exception as error:
+        except Exception as error:  # noqa: BLE001  one failing site must not stop the rest
             return FetchResult(fetcher, [], describe_error(error))
 
 
@@ -90,8 +91,6 @@ def group_by_site(fetchers: list[Fetcher]) -> list[list[Fetcher]]:
 
 
 def describe_error(error: Exception) -> str:
-    import requests
-
     if isinstance(error, requests.Timeout):
         return "the site did not respond in time"
 

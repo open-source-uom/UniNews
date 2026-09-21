@@ -20,7 +20,7 @@ def main() -> int:
     for fetcher in load_fetchers(path):
         try:
             articles = fetcher.fetch()
-        except Exception as error:
+        except Exception as error:  # noqa: BLE001  report every failure, keep going
             failed += 1
             print(f"FAIL   {fetcher.publisher} / {fetcher.label}: {error}")
             continue
