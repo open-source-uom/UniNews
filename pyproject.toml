@@ -30,3 +30,20 @@ uninews = ["resources/publishers/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.pylint.main]
+extension-pkg-allow-list = ["PyQt6"]
+
+[tool.pylint."messages control"]
+disable = [
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "too-few-public-methods",
+    "too-many-instance-attributes",
+    "invalid-name",               # Qt overrides: closeEvent, mousePressEvent
+    "broad-exception-caught",     # deliberate: one failing site must not stop the rest
+]
+
+[tool.pylint.format]
+max-line-length = 100

@@ -1,106 +1,33 @@
-name: UniNews CI/CD Pipeline
+name: Static Analysis
 
 on:
   push:
-    branches: ["main", "geo"]
-    tags: ["v*"]
+    branches: [ "main" ]
+    tags: [ "v*" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   validate-and-package:
     runs-on: ubuntu-24.04
-
     permissions:
       contents: write
-
     steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - name: Checkout Source Code
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.14'
 
-      - name: Install Python Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ruff setuptools wheel
-          pip install -r requirements.txt
+    - name: Install Python Dependencies
+      run: pip install ruff pylint setuptools -e .
 
-      - name: Run Ruff Static Analysis
-        run: |
-          ruff check . --fix
+    - name: Run Ruff Static Analysis
+      run: ruff check src/uninews/
 
-      - name: Install Native Build Tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            debhelper \
-            dh-python \
-            python3-all \
-            python3-setuptools \
-            python3-pyqt6 \
-            python3-bs4 \
-            python3-requests \
-            python3-feedparser
-
-      - name: Scaffold Debian Control Files
-        run: |
-          mkdir -p debian
-          mkdir -p debian/source
-
-          echo "3.0 (native)" > debian/source/format
-
-          cat << 'EOF' > debian/rules
-          #!/usr/bin/make -f
-          %:
-          	dh $@ --with python3 --buildsystem=pybuild
-          EOF
-          chmod +x debian/rules
-
-          cat << 'EOF' > debian/control
-          Source: uninews
-          Section: python
-          Priority: optional
-          Maintainer: George Apostolidis <geoapostolidis999@gmail.com>
-          Build-Depends: debhelper-compat (= 13), dh-python, python3-all, python3-setuptools
-          Standards-Version: 4.6.2
-          Homepage: https://github.com/open-source-uom/UniNews
-
-          Package: python3-uninews
-          Architecture: all
-          Depends: ${python3:Depends}, ${misc:Depends}, python3-pyqt6, python3-bs4, python3-requests, python3-feedparser
-          Description: University RSS and news reader desktop app
-           UniNews is a PyQt6 desktop application that aggregates university
-           RSS feeds and selected university news pages into one clean interface.
-          EOF
-
-          DEB_DATE=$(date -R)
-          DEB_AUTHOR=$(git log -1 --pretty=format:'%an <%ae>')
-
-          printf "uninews (0.1.0) noble; urgency=low\n\n  * Auto-generated release.\n\n -- %s  %s\n" "$DEB_AUTHOR" "$DEB_DATE" > debian/changelog
-
-      - name: Build Debian Packages
-        run: |
-          dpkg-buildpackage -us -uc -b
-          dpkg-buildpackage -us -uc -S
-
-          mkdir -p output_package
-          mv ../uninews_* output_package/
-
-      - name: Upload Package Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: uninews-packages
-          path: output_package/*
-
-      - name: Publish .deb to GitHub Releases
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: output_package/*.deb
+    - name: Run Pylint
+      run: pylint src/uninews/
