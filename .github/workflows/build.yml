@@ -23,11 +23,21 @@ jobs:
       with:
         python-version: '3.14'
 
+    - name: Install Qt System Libraries
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3
+
     - name: Install Python Dependencies
-      run: pip install ruff pylint setuptools -e .
+      run: pip install ruff pylint setuptools -e ".[dev]"
 
     - name: Run Ruff Static Analysis
       run: ruff check src/uninews/
 
     - name: Run Pylint
       run: pylint src/uninews/
+
+    - name: Run Tests
+      env:
+        QT_QPA_PLATFORM: offscreen
+      run: python -m pytest -q
