@@ -1,6 +1,6 @@
 # Maintainer: George Apostolidis <your@email>
 pkgname=uninews
-pkgver=0.2.0
+pkgver=0.2.1
 pkgrel=1
 pkgdesc="University news from Greek and international universities in one place"
 arch=('any')

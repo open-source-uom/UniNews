@@ -247,7 +247,7 @@ class UniNewsWindow(QMainWindow):
     # --- settings ---------------------------------------------------------
 
     def open_settings(self) -> None:
-        from ui.settings_dialog import SettingsDialog
+        from uninews.ui.settings_dialog import SettingsDialog
 
         dialog = SettingsDialog(self.settings, self)
 
