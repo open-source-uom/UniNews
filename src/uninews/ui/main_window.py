@@ -4,7 +4,7 @@ Nothing below this file touches the database or the network.
 """
 
 from PyQt6.QtCore import Qt, QTimer, QUrl
-from PyQt6.QtGui import QDesktopServices
+from PyQt6.QtGui import QDesktopServices, QPixmap
 from PyQt6.QtWidgets import (
     QApplication,
     QFrame,
@@ -98,6 +98,15 @@ class UniNewsWindow(QMainWindow):
         layout.setContentsMargins(24, 20, 24, 20)
         layout.setSpacing(20)
 
+        logo = QLabel()
+        logo.setPixmap(
+            QPixmap(str(config.ICON_FILE)).scaled(
+                56, 56,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+        )
+
         titles = QVBoxLayout()
         titles.setSpacing(4)
 
@@ -123,6 +132,7 @@ class UniNewsWindow(QMainWindow):
         self.refresh_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.refresh_button.clicked.connect(self.refresh)
 
+        layout.addWidget(logo)
         layout.addLayout(titles)
         layout.addStretch()
         layout.addWidget(self.status_button)

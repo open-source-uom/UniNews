@@ -13,6 +13,7 @@ APP_NAME = "uninews"
 
 PACKAGE_DIR = Path(__file__).resolve().parent
 PUBLISHERS_DIR = PACKAGE_DIR / "resources" / "publishers"
+ICON_FILE = PACKAGE_DIR / "resources" / "icons" / "uninews.png"
 
 
 def xdg_dir(variable: str, default: str) -> Path:

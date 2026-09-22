@@ -1,6 +1,7 @@
-# Maintainer: George Apostolidis 
+# Maintainer: George Apostolidis <your@email.com>
+# Builds from the local checkout: run makepkg from the repository root.
 pkgname=uninews
-pkgver=0.2.1
+pkgver=$(grep -m1 '^version' pyproject.toml | cut -d'"' -f2)
 pkgrel=1
 pkgdesc="University news from Greek and international universities in one place"
 arch=('any')
@@ -15,22 +16,22 @@ depends=(
 )
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
 checkdepends=('python-pytest')
-source=("$pkgname::git+https://github.com/open-source-uom/UniNews.git#branch=main")
-sha256sums=('SKIP')
+source=()
 
 build() {
-  cd "$pkgname"
-  python -m build --wheel --no-isolation
+  cd "$startdir"
+  rm -rf build src/uninews.egg-info
+  python -m build --wheel --no-isolation --outdir "$srcdir/dist"
 }
 
 check() {
-  cd "UniNews-$pkgver"
-  PYTHONPATH="src" QT_QPA_PLATFORM=offscreen pytest -q
+  cd "$startdir"
+  PYTHONPATH="src" QT_QPA_PLATFORM=offscreen python -m pytest -q
 }
 
 package() {
-  cd "UniNews-$pkgver"
-  python -m installer --destdir="$pkgdir" dist/*.whl
+  cd "$startdir"
+  python -m installer --destdir="$pkgdir" "$srcdir"/dist/*.whl
 
   install -Dm644 packaging/uninews.desktop \
     "$pkgdir/usr/share/applications/uninews.desktop"
