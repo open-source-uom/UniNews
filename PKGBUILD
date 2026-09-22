@@ -1,4 +1,4 @@
-# Maintainer: George Apostolidis <your@email>
+# Maintainer: George Apostolidis 
 pkgname=uninews
 pkgver=0.2.1
 pkgrel=1
@@ -19,7 +19,7 @@ source=("$pkgname::git+https://github.com/open-source-uom/UniNews.git#branch=mai
 sha256sums=('SKIP')
 
 build() {
-  cd "UniNews-$pkgver"
+  cd "$pkgname"
   python -m build --wheel --no-isolation
 }
 
