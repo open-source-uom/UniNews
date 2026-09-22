@@ -15,7 +15,7 @@ depends=(
 )
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
 checkdepends=('python-pytest')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+source=("$pkgname::git+https://github.com/open-source-uom/UniNews.git#branch=main")
 sha256sums=('SKIP')
 
 build() {
