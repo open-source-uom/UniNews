@@ -173,8 +173,18 @@ JSON with `"type": "example_announcements"`.
 | Settings | `~/.config/uninews/settings.json` |
 | Article cache | `~/.local/share/uninews/uninews.db` |
 | Generated UI assets | `~/.cache/uninews/` |
+| Home university (read-only, written by UniDesk) | `~/.unios/academicConfig.json` |
 
 Deleting the database makes the next refresh fetch everything again.
+
+UniNews opens with one university selected in the sidebar, chosen in this order:
+
+1. **Settings → Open with** in UniNews, if set to a university or "All sources".
+2. The university in the UniOS profile (`universityName` in `~/.unios/academicConfig.json`,
+   set from UniDesk's **Configure UniOS** page).
+3. Otherwise, "All sources" (for example, UniNews installed outside UniOS).
+
+All universities are still fetched; the selection only filters what is shown.
 
 ## Development
 

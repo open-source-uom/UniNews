@@ -19,7 +19,7 @@ from uninews.ui.theme import DARK, LIGHT
 
 
 class SettingsDialog(QDialog):
-    def __init__(self, settings: dict, parent=None):
+    def __init__(self, settings: dict, universities: list[str] | None = None, parent=None):
         super().__init__(parent)
 
         self.settings = dict(settings)
@@ -40,6 +40,15 @@ class SettingsDialog(QDialog):
             self.page_size.addItem(f"{size} / page", size)
         self.page_size.setCurrentIndex(self.page_size.findData(settings.get("page_size", 12)))
 
+        self.home_university = QComboBox()
+        self.home_university.addItem("From UniOS profile", "")
+        self.home_university.addItem("All sources", config.HOME_UNIVERSITY_ALL)
+        for name in universities or []:
+            self.home_university.addItem(name, name)
+        self.home_university.setCurrentIndex(
+            max(0, self.home_university.findData(settings.get("home_university", "")))
+        )
+
         self.refresh_on_startup = QCheckBox("Refresh when the app opens")
         self.refresh_on_startup.setChecked(bool(settings.get("refresh_on_startup", True)))
 
@@ -56,6 +65,7 @@ class SettingsDialog(QDialog):
         self.max_articles.setValue(int(settings.get("max_cached_articles", 500)))
 
         form.addRow("Theme", self.theme)
+        form.addRow("Open with", self.home_university)
         form.addRow("Articles per page", self.page_size)
         form.addRow("", self.refresh_on_startup)
         form.addRow("Auto-refresh every", self.interval)
@@ -90,5 +100,6 @@ class SettingsDialog(QDialog):
             refresh_on_startup=self.refresh_on_startup.isChecked(),
             refresh_interval_minutes=self.interval.value(),
             max_cached_articles=self.max_articles.value(),
+            home_university=self.home_university.currentData(),
         )
         return self.settings

@@ -10,6 +10,7 @@ from uninews import config
 @pytest.fixture(autouse=True)
 def temporary_home(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "SETTINGS_FILE", tmp_path / "settings.json")
+    monkeypatch.setattr(config, "ACADEMIC_CONFIG_FILE", tmp_path / "academicConfig.json")
 
 
 def test_defaults_when_nothing_saved():
@@ -43,3 +44,41 @@ def test_refresh_interval_has_a_floor():
     assert config.refresh_interval_ms({"refresh_interval_minutes": 1}) == (
         config.MIN_REFRESH_INTERVAL_MINUTES * 60_000
     )
+
+
+
+def write_unios_profile(university):
+    config.ACADEMIC_CONFIG_FILE.write_text(
+        json.dumps({"universityName": university, "departmentName": "Informatics"}),
+        encoding="utf-8",
+    )
+
+
+def test_unios_university_from_unidesk():
+    write_unios_profile("University of Macedonia")
+    assert config.load_unios_university() == "University of Macedonia"
+
+
+@pytest.mark.parametrize("content", [None, "{not json", "[]", '{"universityName": ""}'])
+def test_unios_university_empty_when_unset_or_broken(content):
+    if content is not None:
+        config.ACADEMIC_CONFIG_FILE.write_text(content, encoding="utf-8")
+    assert config.load_unios_university() == ""
+
+
+def test_home_university_defaults_to_all_sources():
+    assert config.home_university(config.DEFAULT_SETTINGS) == ""
+
+
+def test_home_university_follows_unios_profile():
+    write_unios_profile("University of Macedonia")
+    assert config.home_university(config.DEFAULT_SETTINGS) == "University of Macedonia"
+
+
+@pytest.mark.parametrize(
+    ("setting", "expected"),
+    [("University of Western Macedonia", "University of Western Macedonia"), ("all", "")],
+)
+def test_uninews_setting_wins_over_unios_profile(setting, expected):
+    write_unios_profile("University of Macedonia")
+    assert config.home_university({"home_university": setting}) == expected

@@ -38,6 +38,8 @@ class UniNewsWindow(QMainWindow):
         self.library = Library(self.database, self.settings["page_size"])
         self.worker: FetchWorker | None = None
         self.last_results: list[FetchResult] = []
+        # Preselected once, as soon as its articles are in the database.
+        self.home_university = config.home_university(self.settings)
 
         self.setWindowTitle("UniNews")
         self.resize(1050, 720)
@@ -145,9 +147,19 @@ class UniNewsWindow(QMainWindow):
 
     def reload(self) -> None:
         """Redraw the list, sidebar and pagination from the database."""
+        tree = self.database.get_source_tree()
+        home = self.take_home_university(tree)
+
+        if home:
+            self.library.set_filter(category=home[0], publisher=home[1], source=None)
+
         page = self.library.current_page()
 
-        self.sidebar.set_sources(self.database.get_source_tree())
+        self.sidebar.set_sources(tree)
+
+        if home:
+            self.sidebar.select((home[0], home[1], ""))
+
         self.article_list.show_articles(page.articles)
         self.pagination.update(page, self.library.page_buttons())
 
@@ -155,6 +167,23 @@ class UniNewsWindow(QMainWindow):
             self.article_list.show_message(
                 "No articles yet.\nPress “Refresh news” to fetch them."
             )
+
+    def take_home_university(
+        self, tree: dict[str, dict[str, list[str]]]
+    ) -> tuple[str, str] | None:
+        """(category, publisher) for the home university, once, as soon as it has articles."""
+        if not self.home_university:
+            return None
+
+        wanted = self.home_university.casefold()
+
+        for category, publishers in tree.items():
+            for publisher in publishers:
+                if publisher.casefold() == wanted:
+                    self.home_university = ""
+                    return category, publisher
+
+        return None
 
     def on_filter_changed(self, category: str, publisher: str, source: str) -> None:
         self.library.set_filter(
@@ -258,11 +287,17 @@ class UniNewsWindow(QMainWindow):
     # --- settings ---------------------------------------------------------
 
     def open_settings(self) -> None:
-        dialog = SettingsDialog(self.settings, self)
+        previous_home = self.settings.get("home_university", "")
+        dialog = SettingsDialog(self.settings, self.university_names(), self)
 
         if dialog.exec():
             self.settings = dialog.result_settings()
             config.save_settings(self.settings)
+
+            if self.settings.get("home_university", "") != previous_home:
+                self.home_university = config.home_university(self.settings)
+                self.library.set_filter(category=None, publisher=None, source=None)
+                self.sidebar.select(("", "", ""))
 
             self.library.set_page_size(self.settings["page_size"])
             self.apply_theme()
@@ -271,6 +306,16 @@ class UniNewsWindow(QMainWindow):
             self.reload()
 
             self.statusBar().showMessage("Settings saved.", 5000)
+
+    @staticmethod
+    def university_names() -> list[str]:
+        """Publishers in the "university" category, for the settings dialog."""
+        try:
+            fetchers = load_fetchers(config.PUBLISHERS_DIR)
+        except (OSError, ValueError):
+            return []
+
+        return sorted({f.publisher for f in fetchers if f.category == "university"})
 
     def apply_theme(self) -> None:
         self.setStyleSheet(stylesheet(self.settings.get("theme", "light")))
