@@ -69,3 +69,4 @@ ui/__pycache__/
 # Virtual environments
 .vscode/
 build/
+docs/
