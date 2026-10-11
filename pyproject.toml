@@ -31,6 +31,10 @@ uninews = ["resources/publishers/*.json", "resources/icons/*.png"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
+[tool.ruff.lint]
+# Naive datetimes must be explicit (# noqa: DTZ001); keeps results stable across ruff versions.
+extend-select = ["DTZ"]
+
 [tool.pylint.main]
 extension-pkg-allow-list = ["PyQt6"]
 
