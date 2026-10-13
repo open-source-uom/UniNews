@@ -194,6 +194,12 @@ ruff check .
 ruff check . --fix
 ```
 
+API docs are generated with [Doxygen](https://www.doxygen.nl/) from the docstrings:
+
+```bash
+doxygen Doxyfile            # output: docs/html/index.html
+```
+
 Tests run against saved pages in `tests/fixtures/`, so a failure means the code
 broke. To find out whether a *site* changed, run the fetcher checker instead.
 
