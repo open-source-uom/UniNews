@@ -28,13 +28,19 @@ CACHE_DIR = xdg_dir("XDG_CACHE_HOME", ".cache")
 SETTINGS_FILE = CONFIG_DIR / "settings.json"
 DATABASE_FILE = DATA_DIR / "uninews.db"
 
+# UniOS profile, written by UniDesk's "Configure UniOS" page. Read-only here.
+ACADEMIC_CONFIG_FILE = Path.home() / ".unios" / "academicConfig.json"
+
 DEFAULT_SETTINGS = {
     "theme": "light",
     "page_size": 12,
     "refresh_on_startup": True,
     "refresh_interval_minutes": 0,          # 0 = only when asked
     "max_cached_articles": 500,
+    "home_university": "",                  # "" = UniOS profile, "all" = All sources
 }
+
+HOME_UNIVERSITY_ALL = "all"
 
 MIN_REFRESH_INTERVAL_MINUTES = 15           # be kind to university servers
 
@@ -67,6 +73,32 @@ def save_settings(settings: dict) -> None:
         json.dumps(settings, indent=2, ensure_ascii=False), encoding="utf-8"
     )
     temporary.replace(SETTINGS_FILE)
+
+
+def load_unios_university() -> str:
+    """The university picked in UniDesk, or "" when none is set or the file is unreadable."""
+    try:
+        data = json.loads(ACADEMIC_CONFIG_FILE.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return ""
+
+    if not isinstance(data, dict):
+        return ""
+
+    return str(data.get("universityName") or "").strip()
+
+
+def home_university(settings: dict) -> str:
+    """Publisher to open with, or "" for All sources.
+
+    Order: the UniNews setting, then the UniOS profile from UniDesk, then All sources.
+    """
+    choice = str(settings.get("home_university") or "").strip()
+
+    if choice == HOME_UNIVERSITY_ALL:
+        return ""
+
+    return choice or load_unios_university()
 
 
 def refresh_interval_ms(settings: dict) -> int:
