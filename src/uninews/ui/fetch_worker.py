@@ -13,6 +13,7 @@ from PyQt6.QtCore import QThread, pyqtSignal
 
 from uninews.article import Article
 from uninews.fetchers.base import Fetcher
+from uninews.i18n import tr
 
 MAX_PARALLEL_SITES = 6
 
@@ -92,12 +93,12 @@ def group_by_site(fetchers: list[Fetcher]) -> list[list[Fetcher]]:
 
 def describe_error(error: Exception) -> str:
     if isinstance(error, requests.Timeout):
-        return "the site did not respond in time"
+        return tr("error.timeout")
 
     if isinstance(error, requests.ConnectionError):
-        return "could not connect (site down, or no internet)"
+        return tr("error.connection")
 
     if isinstance(error, requests.HTTPError) and error.response is not None:
-        return f"the site returned HTTP {error.response.status_code}"
+        return tr("error.http", status=error.response.status_code)
 
     return str(error) or type(error).__name__

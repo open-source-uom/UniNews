@@ -15,7 +15,8 @@ from uninews.ui.article_card import ArticleCard, shorten  # noqa: E402
 from uninews.ui.labels import initials, initialism, shorten_source  # noqa: E402
 from uninews.ui.article_list import ArticleList  # noqa: E402
 from uninews.ui.pagination import Pagination  # noqa: E402
-from uninews.ui.sidebar import ALL_LABEL, Sidebar  # noqa: E402
+from uninews.i18n import tr  # noqa: E402
+from uninews.ui.sidebar import Sidebar  # noqa: E402
 from uninews.ui.theme import DARK, LIGHT, stylesheet  # noqa: E402
 
 
@@ -111,7 +112,7 @@ def test_sidebar_rows_and_signal(app):
     )
 
     labels = [sidebar.tree.item(i).text() for i in range(sidebar.tree.count())]
-    assert labels[0] == ALL_LABEL
+    assert labels[0] == tr("sidebar.all")
     assert "MIT" in labels
 
     row = next(
@@ -218,3 +219,14 @@ def test_cards_keep_their_natural_height(app):
 
     card = ArticleCard(make_article())
     assert card.sizePolicy().verticalPolicy() == QSizePolicy.Policy.Maximum
+
+
+@pytest.mark.parametrize("language", ["", "en", "el"])
+def test_settings_dialog_keeps_language(app, language):
+    from uninews.config import DEFAULT_SETTINGS
+    from uninews.ui.settings_dialog import SettingsDialog
+
+    dialog = SettingsDialog({**DEFAULT_SETTINGS, "language": language})
+    assert dialog.language.currentData() == language
+    assert [dialog.language.itemText(i) for i in (1, 2)] == ["English", "Ελληνικά"]
+    assert dialog.result_settings()["language"] == language

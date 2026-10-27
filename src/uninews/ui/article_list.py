@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QLabel, QScrollArea, QVBoxLayout, QWidget
 
 from uninews.article import Article
+from uninews.i18n import tr
 from uninews.ui.article_card import ArticleCard
 
 
@@ -32,7 +33,7 @@ class ArticleList(QScrollArea):
         self.clear()
 
         if not articles:
-            self.show_message("No articles found.\nTry refreshing or changing the filter.")
+            self.show_message(tr("list.empty"))
             return
 
         for article in articles:

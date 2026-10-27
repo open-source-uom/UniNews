@@ -32,6 +32,7 @@ DATABASE_FILE = DATA_DIR / "uninews.db"
 ACADEMIC_CONFIG_FILE = Path.home() / ".unios" / "academicConfig.json"
 
 DEFAULT_SETTINGS = {
+    "language": "",                         # "" = desktop language, "en", "el"
     "theme": "light",
     "page_size": 12,
     "refresh_on_startup": True,
