@@ -2,7 +2,7 @@
 # Builds from the local checkout: run makepkg from the repository root.
 pkgname=uninews
 pkgver=$(grep -m1 '^version' pyproject.toml | cut -d'"' -f2)
-pkgrel=1
+pkgrel=2
 pkgdesc="University news from Greek and international universities in one place"
 arch=('any')
 url="https://github.com/open-source-uom/UniNews"
