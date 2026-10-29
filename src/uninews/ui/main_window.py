@@ -17,9 +17,10 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from uninews import config
+from uninews import config, i18n
 from uninews.database import Database
 from uninews.fetchers import load_fetchers
+from uninews.i18n import tr
 from uninews.library import Library
 from uninews.ui.article_list import ArticleList
 from uninews.ui.fetch_worker import FetchResult, FetchWorker
@@ -92,6 +93,25 @@ class UniNewsWindow(QMainWindow):
         self.setCentralWidget(root)
         self.statusBar()
 
+    def _rebuild_ui(self) -> None:
+        """Build the widgets again in the new language, keeping the filter and search."""
+        current = self.library.filter
+
+        self.build_ui()                     # setCentralWidget() deletes the old widgets
+
+        self.sidebar.search_input.blockSignals(True)
+        self.sidebar.search_input.setText(current.search)
+        self.sidebar.search_input.blockSignals(False)
+
+        self.reload()
+        self.sidebar.select(
+            (current.category or "", current.publisher or "", current.source or "")
+        )
+
+        if self.worker is not None and self.worker.isRunning():
+            self.refresh_button.setEnabled(False)
+            self.refresh_button.setText(tr("header.refreshing"))
+
     def build_header(self) -> QFrame:
         header = QFrame()
         header.setObjectName("HeaderCard")
@@ -115,21 +135,21 @@ class UniNewsWindow(QMainWindow):
         title = QLabel("UniNews")
         title.setObjectName("TitleLabel")
 
-        subtitle = QLabel("University news in one clean place")
+        subtitle = QLabel(tr("app.subtitle"))
         subtitle.setObjectName("SubtitleLabel")
 
         titles.addWidget(title)
         titles.addWidget(subtitle)
 
-        self.status_button = QPushButton("Sources")
+        self.status_button = QPushButton(tr("header.sources"))
         self.status_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.status_button.clicked.connect(self.show_source_status)
 
-        self.settings_button = QPushButton("Settings")
+        self.settings_button = QPushButton(tr("header.settings"))
         self.settings_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.settings_button.clicked.connect(self.open_settings)
 
-        self.refresh_button = QPushButton("Refresh news")
+        self.refresh_button = QPushButton(tr("header.refresh"))
         self.refresh_button.setObjectName("RefreshButton")
         self.refresh_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.refresh_button.clicked.connect(self.refresh)
@@ -164,9 +184,7 @@ class UniNewsWindow(QMainWindow):
         self.pagination.update(page, self.library.page_buttons())
 
         if not page.articles and self.library.filter.is_empty and not self.last_results:
-            self.article_list.show_message(
-                "No articles yet.\nPress “Refresh news” to fetch them."
-            )
+            self.article_list.show_message(tr("list.empty_first_run"))
 
     def take_home_university(
         self, tree: dict[str, dict[str, list[str]]]
@@ -220,11 +238,11 @@ class UniNewsWindow(QMainWindow):
         try:
             fetchers = load_fetchers(config.PUBLISHERS_DIR)
         except (OSError, ValueError) as error:
-            QMessageBox.critical(self, "Could not load sources", str(error))
+            QMessageBox.critical(self, tr("fetch.load_error"), str(error))
             return
 
         self.refresh_button.setEnabled(False)
-        self.refresh_button.setText("Refreshing...")
+        self.refresh_button.setText(tr("header.refreshing"))
 
         self.worker = FetchWorker(fetchers, self)
         self.worker.progress.connect(self.on_fetch_progress)
@@ -232,7 +250,7 @@ class UniNewsWindow(QMainWindow):
         self.worker.start()
 
     def on_fetch_progress(self, done: int, total: int, label: str) -> None:
-        self.statusBar().showMessage(f"Fetching {done}/{total}: {label}")
+        self.statusBar().showMessage(tr("fetch.progress", done=done, total=total, label=label))
 
     def on_fetch_finished(self, results: list[FetchResult]) -> None:
         self.last_results = results
@@ -248,16 +266,16 @@ class UniNewsWindow(QMainWindow):
 
     def finish_refresh(self, results, new_count: int, removed: int) -> None:
         self.refresh_button.setEnabled(True)
-        self.refresh_button.setText("Refresh news")
+        self.refresh_button.setText(tr("header.refresh"))
 
         failed = [result for result in results if not result.ok]
-        message = f"{new_count} new article{'s' if new_count != 1 else ''}"
+        message = tr("fetch.new", count=new_count)
 
         if removed:
-            message += f", {removed} old removed"
+            message += ", " + tr("fetch.removed", count=removed)
 
         if failed:
-            message += f" — {len(failed)} source{'s' if len(failed) > 1 else ''} failed"
+            message += " — " + tr("fetch.failed", count=len(failed))
 
         self.statusBar().showMessage(message, 10000)
         self.reload()
@@ -265,29 +283,28 @@ class UniNewsWindow(QMainWindow):
     def show_source_status(self) -> None:
         """What each source did on the last refresh."""
         if not self.last_results:
-            QMessageBox.information(
-                self, "Sources", "No refresh yet in this session."
-            )
+            QMessageBox.information(self, tr("status.title"), tr("status.no_refresh"))
             return
 
         working = [result for result in self.last_results if result.ok]
         failed = [result for result in self.last_results if not result.ok]
 
-        lines = [f"{len(working)} of {len(self.last_results)} sources worked."]
+        lines = [tr("status.worked", working=len(working), total=len(self.last_results))]
 
         if failed:
-            lines.append("\nFailed:")
+            lines.append("\n" + tr("status.failed"))
             lines += [
                 f"  • {result.fetcher.publisher} / {result.fetcher.label}: {result.error}"
                 for result in failed
             ]
 
-        QMessageBox.information(self, "Sources", "\n".join(lines))
+        QMessageBox.information(self, tr("status.title"), "\n".join(lines))
 
     # --- settings ---------------------------------------------------------
 
     def open_settings(self) -> None:
         previous_home = self.settings.get("home_university", "")
+        previous_language = i18n.current_language()
         dialog = SettingsDialog(self.settings, self.university_names(), self)
 
         if dialog.exec():
@@ -303,9 +320,13 @@ class UniNewsWindow(QMainWindow):
             self.apply_theme()
             self.apply_refresh_timer()
             self.database.trim(int(self.settings["max_cached_articles"]))
-            self.reload()
 
-            self.statusBar().showMessage("Settings saved.", 5000)
+            if i18n.set_language(self.settings.get("language")) != previous_language:
+                self._rebuild_ui()
+            else:
+                self.reload()
+
+            self.statusBar().showMessage(tr("settings.saved"), 5000)
 
     @staticmethod
     def university_names() -> list[str]:

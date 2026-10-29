@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QFrame, QHBoxLayout, QLabel, QSizePolicy, QVBoxLayout
 
 from uninews.article import Article
+from uninews.i18n import tr
 from uninews.ui.labels import initials, shorten_source
 
 SUMMARY_LIMIT = 230
@@ -44,10 +45,10 @@ class ArticleCard(QFrame):
         layout.setSpacing(8)
 
         for text, name, wrap in (
-            (self.article.title or "Untitled", "ArticleTitle", True),
+            (self.article.title or tr("card.untitled"), "ArticleTitle", True),
             (self.meta_text(), "ArticleMeta", True),
             (shorten(self.article.summary), "ArticleSummary", True),
-            ("Open article →", "OpenArticleLabel", False),
+            (tr("card.open"), "OpenArticleLabel", False),
         ):
             if not text:
                 continue

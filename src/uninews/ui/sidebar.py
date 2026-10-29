@@ -10,10 +10,10 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
 )
 
+from uninews.i18n import tr
 from uninews.ui.labels import shorten_source
 
 FILTER_ROLE = Qt.ItemDataRole.UserRole
-ALL_LABEL = "All sources"
 INDENT = "    "
 
 
@@ -36,12 +36,12 @@ class Sidebar(QFrame):
         layout.setContentsMargins(18, 18, 18, 18)
         layout.setSpacing(14)
 
-        title = QLabel("Sources")
+        title = QLabel(tr("sidebar.title"))
         title.setObjectName("SidebarTitle")
 
         self.search_input = QLineEdit()
         self.search_input.setObjectName("SearchInput")
-        self.search_input.setPlaceholderText("Search articles...")
+        self.search_input.setPlaceholderText(tr("sidebar.search"))
         self.search_input.textChanged.connect(
             lambda text: self.search_changed.emit(text.strip())
         )
@@ -69,7 +69,7 @@ class Sidebar(QFrame):
         self.tree.blockSignals(True)
         self.tree.clear()
 
-        self.add_row(ALL_LABEL, ("", "", ""))
+        self.add_row(tr("sidebar.all"), ("", "", ""))
 
         for category, publishers in tree.items():
             for publisher, sources in publishers.items():

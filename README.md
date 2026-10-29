@@ -19,6 +19,7 @@ university usually means adding a few lines of configuration, not writing code.
 - Filter by publisher or by individual source
 - Articles sorted by publication date, across many different date formats
 - Light and dark themes
+- English and Greek interface (follows the desktop language, or pick one in Settings)
 - Background fetching: the window stays responsive while sources load
 - A "Sources" view showing which sources failed on the last refresh, and why
 - Configurable auto-refresh, article cache size and page size
@@ -72,6 +73,7 @@ UniNews/
 │   ├── article.py            the Article record
 │   ├── dates.py              many date formats -> one sortable format
 │   ├── text.py               whitespace and accent handling
+│   ├── i18n.py               interface text in English and Greek
 │   ├── fetchers/             how articles are retrieved
 │   │   ├── base.py           Fetcher: HTTP, cleanup, deduplication
 │   │   ├── html.py           HtmlFetcher: CSS-selector scraping
@@ -202,6 +204,21 @@ doxygen Doxyfile            # output: docs/html/index.html
 
 Tests run against saved pages in `tests/fixtures/`, so a failure means the code
 broke. To find out whether a *site* changed, run the fetcher checker instead.
+
+## Translations
+
+All interface text lives in `src/uninews/i18n.py`, one dict per language,
+looked up with `tr("key")`. Publisher, source and article text come from the
+sites and are not translated.
+
+- **Settings → Language**: "Same as system" (default) reads `LANGUAGE`,
+  `LC_ALL`, `LC_MESSAGES` and `LANG`; anything other than Greek falls back to
+  English. The choice is stored as `"language": "" | "en" | "el"` in
+  `settings.json` and applies immediately.
+- **New string**: add the key to `EN` and `EL`. Text with a number uses a
+  `(one, other)` pair: `tr("fetch.new", count=n)`.
+- **New language**: add a dict to `CATALOGS` and its native name to
+  `LANGUAGES`. `tests/test_i18n.py` fails if a key or a `{placeholder}` is missing.
 
 ## Being a good citizen
 

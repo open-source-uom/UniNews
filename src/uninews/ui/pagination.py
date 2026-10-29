@@ -3,6 +3,7 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QComboBox, QFrame, QHBoxLayout, QLabel, QPushButton
 
+from uninews.i18n import tr
 from uninews.library import PAGE_SIZES, Page
 
 
@@ -24,8 +25,8 @@ class Pagination(QFrame):
         self.summary = QLabel()
         self.summary.setObjectName("PaginationSummary")
 
-        self.previous_button = self.make_button("‹ Previous", "PaginationButton")
-        self.next_button = self.make_button("Next ›", "PaginationButton")
+        self.previous_button = self.make_button(tr("pagination.previous"), "PaginationButton")
+        self.next_button = self.make_button(tr("pagination.next"), "PaginationButton")
 
         self.page_buttons_layout = QHBoxLayout()
         self.page_buttons_layout.setSpacing(6)
@@ -34,7 +35,7 @@ class Pagination(QFrame):
         self.size_combo.setObjectName("PaginationSize")
 
         for size in PAGE_SIZES:
-            self.size_combo.addItem(f"{size} / page", size)
+            self.size_combo.addItem(tr("pagination.per_page", size=size), size)
 
         self.size_combo.setCurrentIndex(self.size_combo.findData(page_size))
         self.size_combo.currentIndexChanged.connect(
@@ -71,7 +72,12 @@ class Pagination(QFrame):
             return
 
         self.summary.setText(
-            f"Showing {page.first_index}-{page.last_index} of {page.total_articles}"
+            tr(
+                "pagination.summary",
+                first=page.first_index,
+                last=page.last_index,
+                total=page.total_articles,
+            )
         )
         self.previous_button.setEnabled(page.has_previous)
         self.next_button.setEnabled(page.has_next)

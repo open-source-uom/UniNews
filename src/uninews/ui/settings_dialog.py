@@ -13,7 +13,8 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
 )
 
-from uninews import config
+from uninews import config, i18n
+from uninews.i18n import tr
 from uninews.library import PAGE_SIZES
 from uninews.ui.theme import DARK, LIGHT
 
@@ -23,40 +24,41 @@ class SettingsDialog(QDialog):
         super().__init__(parent)
 
         self.settings = dict(settings)
-        self.setWindowTitle("Settings")
+        self.setWindowTitle(tr("settings.title"))
         self.setMinimumWidth(420)
 
-        layout = QVBoxLayout(self)
-        form = QFormLayout()
-        form.setSpacing(10)
-
-        self.theme = QComboBox()
-        self.theme.addItem("Light", LIGHT)
-        self.theme.addItem("Dark", DARK)
-        self.theme.setCurrentIndex(self.theme.findData(settings.get("theme", LIGHT)))
-
-        self.page_size = QComboBox()
-        for size in PAGE_SIZES:
-            self.page_size.addItem(f"{size} / page", size)
-        self.page_size.setCurrentIndex(self.page_size.findData(settings.get("page_size", 12)))
-
-        self.home_university = QComboBox()
-        self.home_university.addItem("From UniOS profile", "")
-        self.home_university.addItem("All sources", config.HOME_UNIVERSITY_ALL)
-        for name in universities or []:
-            self.home_university.addItem(name, name)
-        self.home_university.setCurrentIndex(
-            max(0, self.home_university.findData(settings.get("home_university", "")))
+        self.language = combo(
+            [
+                (tr("settings.language_system"), i18n.SYSTEM),
+                *((name, code) for code, name in i18n.LANGUAGES.items()),
+            ],
+            settings.get("language", i18n.SYSTEM),
+        )
+        self.theme = combo(
+            [(tr("settings.theme_light"), LIGHT), (tr("settings.theme_dark"), DARK)],
+            settings.get("theme", LIGHT),
+        )
+        self.page_size = combo(
+            [(tr("pagination.per_page", size=size), size) for size in PAGE_SIZES],
+            settings.get("page_size", 12),
+        )
+        self.home_university = combo(
+            [
+                (tr("settings.open_with_profile"), ""),
+                (tr("sidebar.all"), config.HOME_UNIVERSITY_ALL),
+                *((name, name) for name in universities or []),
+            ],
+            settings.get("home_university", ""),
         )
 
-        self.refresh_on_startup = QCheckBox("Refresh when the app opens")
+        self.refresh_on_startup = QCheckBox(tr("settings.refresh_on_startup"))
         self.refresh_on_startup.setChecked(bool(settings.get("refresh_on_startup", True)))
 
         self.interval = QSpinBox()
         self.interval.setRange(0, 24 * 60)
         self.interval.setSingleStep(15)
-        self.interval.setSpecialValueText("Off")
-        self.interval.setSuffix(" min")
+        self.interval.setSpecialValueText(tr("settings.interval_off"))
+        self.interval.setSuffix(tr("settings.minutes_suffix"))
         self.interval.setValue(int(settings.get("refresh_interval_minutes", 0)))
 
         self.max_articles = QSpinBox()
@@ -64,20 +66,26 @@ class SettingsDialog(QDialog):
         self.max_articles.setSingleStep(50)
         self.max_articles.setValue(int(settings.get("max_cached_articles", 500)))
 
-        form.addRow("Theme", self.theme)
-        form.addRow("Open with", self.home_university)
-        form.addRow("Articles per page", self.page_size)
+        form = QFormLayout()
+        form.setSpacing(10)
+        form.addRow(tr("settings.language"), self.language)
+        form.addRow(tr("settings.theme"), self.theme)
+        form.addRow(tr("settings.open_with"), self.home_university)
+        form.addRow(tr("settings.per_page"), self.page_size)
         form.addRow("", self.refresh_on_startup)
-        form.addRow("Auto-refresh every", self.interval)
-        form.addRow("Keep at most", self.max_articles)
+        form.addRow(tr("settings.interval"), self.interval)
+        form.addRow(tr("settings.keep_at_most"), self.max_articles)
 
-        note = QLabel(
-            f"Auto-refresh runs at most every {config.MIN_REFRESH_INTERVAL_MINUTES} "
-            "minutes, to avoid overloading university servers."
-        )
+        note = QLabel(tr("settings.note", minutes=config.MIN_REFRESH_INTERVAL_MINUTES))
         note.setObjectName("SettingsNote")
         note.setWordWrap(True)
 
+        layout = QVBoxLayout(self)
+        layout.addLayout(form)
+        layout.addWidget(note)
+        layout.addWidget(self.build_buttons())
+
+    def build_buttons(self) -> QDialogButtonBox:
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
         )
@@ -85,16 +93,19 @@ class SettingsDialog(QDialog):
             button.setIcon(QIcon())          # drop the desktop theme's icons
             button.setCursor(Qt.CursorShape.PointingHandCursor)
 
-        buttons.button(QDialogButtonBox.StandardButton.Save).setObjectName("SaveButton")
+        # Set explicitly: Qt's own labels stay English without a qtbase translation.
+        save = buttons.button(QDialogButtonBox.StandardButton.Save)
+        save.setObjectName("SaveButton")
+        save.setText(tr("settings.save"))
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(tr("settings.cancel"))
+
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
-
-        layout.addLayout(form)
-        layout.addWidget(note)
-        layout.addWidget(buttons)
+        return buttons
 
     def result_settings(self) -> dict:
         self.settings.update(
+            language=self.language.currentData(),
             theme=self.theme.currentData(),
             page_size=self.page_size.currentData(),
             refresh_on_startup=self.refresh_on_startup.isChecked(),
@@ -103,3 +114,14 @@ class SettingsDialog(QDialog):
             home_university=self.home_university.currentData(),
         )
         return self.settings
+
+
+def combo(items, current) -> QComboBox:
+    """A combo box of (text, value) pairs, with current selected (or the first item)."""
+    box = QComboBox()
+
+    for text, value in items:
+        box.addItem(text, value)
+
+    box.setCurrentIndex(max(0, box.findData(current)))
+    return box
