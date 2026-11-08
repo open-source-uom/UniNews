@@ -1,41 +1,59 @@
-# Maintainer: George Apostolidis <your@email.com>
-# Builds from the local checkout: run makepkg from the repository root.
-pkgname=uninews
-pkgver=$(grep -m1 '^version' pyproject.toml | cut -d'"' -f2)
-pkgrel=2
+# Maintainer: Antonios Rainakis <antonyrai26@gmail.com>
+pkgname=uninews-git
+_pkgname=UniNews
+pkgver=0.2.1.r49.g98e5d6c
+pkgrel=1
 pkgdesc="University news from Greek and international universities in one place"
 arch=('any')
 url="https://github.com/open-source-uom/UniNews"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=(
-  'python'
-  'python-pyqt6'
-  'python-requests'
-  'python-beautifulsoup4'
-  'python-feedparser'
+    'hicolor-icon-theme'
+    'python'
+    'python-beautifulsoup4'
+    'python-feedparser'
+    'python-pyqt6'
+    'python-requests'
 )
-makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
-checkdepends=('python-pytest')
-source=()
+makedepends=(
+    'git'
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+    'python-wheel'
+)
+checkdepends=(
+    'python-pytest'
+)
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${_pkgname}"
+    local _ver
+    _ver=$(grep -m1 '^version' pyproject.toml | cut -d'"' -f2)
+    printf "%s.r%s.g%s" "$_ver" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
 
 build() {
-  cd "$startdir"
-  rm -rf build src/uninews.egg-info
-  python -m build --wheel --no-isolation --outdir "$srcdir/dist"
+    cd "${_pkgname}"
+    python -m build --wheel --no-isolation
 }
 
 check() {
-  cd "$startdir"
-  PYTHONPATH="src" QT_QPA_PLATFORM=offscreen python -m pytest -q
+    cd "${_pkgname}"
+    PYTHONPATH="src" QT_QPA_PLATFORM=offscreen pytest -q
 }
 
 package() {
-  cd "$startdir"
-  python -m installer --destdir="$pkgdir" "$srcdir"/dist/*.whl
+    cd "${_pkgname}"
+    python -m installer --destdir="$pkgdir" dist/*.whl
 
-  install -Dm644 packaging/uninews.desktop \
-    "$pkgdir/usr/share/applications/uninews.desktop"
-  install -Dm644 packaging/uninews.svg \
-    "$pkgdir/usr/share/icons/hicolor/scalable/apps/uninews.svg"
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 packaging/uninews.desktop \
+        "$pkgdir/usr/share/applications/uninews.desktop"
+    install -Dm644 packaging/uninews.svg \
+        "$pkgdir/usr/share/icons/hicolor/scalable/apps/uninews.svg"
 }
+
