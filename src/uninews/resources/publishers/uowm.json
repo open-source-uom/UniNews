@@ -132,6 +132,11 @@
       "label": "UoWM Communication and Digital Media",
       "type": "rss",
       "url": "https://cdm.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Psychology",
+      "type": "rss",
+      "url": "https://psy.uowm.gr/feed/"
     }
   ]
 }
