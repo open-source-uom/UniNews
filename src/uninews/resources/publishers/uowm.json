@@ -49,11 +49,8 @@
     },
     {
       "label": "UoWM Product and Systems Design Engineering - News",
-      "url": "https://ide.uowm.gr/en/category/news/",
-      "item_selector": "article.type-post, article.post",
-      "title_selector": "h2 a, .entry-title a",
-      "date_selector": "time, .entry-date, .posted-on",
-      "summary_selector": ".entry-summary, .entry-content"
+      "type": "rss",
+      "url": "https://ide.uowm.gr/feed/"
     },
     {
       "label": "UoWM Early Childhood Education",
