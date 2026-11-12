@@ -117,6 +117,11 @@
       "title_selector": "h2 a, .entry-title a",
       "date_selector": "time, .entry-date, .posted-on",
       "summary_selector": ".entry-summary, .entry-content"
+    },
+    {
+      "label": "UoWM Mechanical Engineering",
+      "type": "rss",
+      "url": "https://mech.uowm.gr/feed/"
     }
   ]
 }
