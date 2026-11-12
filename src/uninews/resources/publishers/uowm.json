@@ -127,6 +127,11 @@
       "label": "UoWM Primary Education",
       "type": "rss",
       "url": "https://eled.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Communication and Digital Media",
+      "type": "rss",
+      "url": "https://cdm.uowm.gr/feed/"
     }
   ]
 }
