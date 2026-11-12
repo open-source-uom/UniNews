@@ -122,6 +122,11 @@
       "label": "UoWM Mechanical Engineering",
       "type": "rss",
       "url": "https://mech.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Primary Education",
+      "type": "rss",
+      "url": "https://eled.uowm.gr/feed/"
     }
   ]
 }
