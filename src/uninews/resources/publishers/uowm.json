@@ -157,6 +157,11 @@
       "label": "UoWM Economics",
       "type": "rss",
       "url": "https://econ.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Statistics and Insurance Science",
+      "type": "rss",
+      "url": "https://stat.uowm.gr/feed/"
     }
   ]
 }
