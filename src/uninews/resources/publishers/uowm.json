@@ -142,6 +142,11 @@
       "label": "UoWM Mathematics",
       "type": "rss",
       "url": "https://math.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Management Science and Technology",
+      "type": "rss",
+      "url": "https://mst.uowm.gr/feed/"
     }
   ]
 }
