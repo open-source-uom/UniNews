@@ -100,11 +100,8 @@
     },
     {
       "label": "UoWM Applied and Fine Arts",
-      "url": "https://eetf.uowm.gr/en/category/news/",
-      "item_selector": ".news-mini-wrap.type-post, .news-mini-wrap",
-      "title_selector": "h1 a, h2 a, .entry-title a",
-      "date_selector": "time, .news-meta",
-      "summary_selector": ".news-summary, .entry-summary, .entry-content"
+      "type": "rss",
+      "url": "https://eetf.uowm.gr/feed/"
     },
     {
       "label": "UoWM Occupational Therapy",
