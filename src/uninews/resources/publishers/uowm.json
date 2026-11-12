@@ -137,6 +137,11 @@
       "label": "UoWM Psychology",
       "type": "rss",
       "url": "https://psy.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Mathematics",
+      "type": "rss",
+      "url": "https://math.uowm.gr/feed/"
     }
   ]
 }
