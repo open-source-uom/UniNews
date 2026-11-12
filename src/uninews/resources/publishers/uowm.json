@@ -152,6 +152,11 @@
       "label": "UoWM Accounting and Finance",
       "type": "rss",
       "url": "https://accfin.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Economics",
+      "type": "rss",
+      "url": "https://econ.uowm.gr/feed/"
     }
   ]
 }
