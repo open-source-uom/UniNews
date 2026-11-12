@@ -65,12 +65,8 @@
     },
     {
       "label": "UoWM Computer Science",
-      "url": "https://cs.uowm.gr/en/home-page/",
-      "item_selector": ".latest-news-item",
-      "title_selector": ".latest-news-title a, h3 a",
-      "date_selector": ".latest-news-date, time, .posted-on",
-      "summary_selector": ".latest-news-text-content p, .latest-news-excerpt",
-      "pages": 1
+      "type": "rss",
+      "url": "https://cs.uowm.gr/feed/"
     },
     {
       "label": "UoWM Agriculture",
