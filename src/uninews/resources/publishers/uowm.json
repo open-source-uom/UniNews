@@ -147,6 +147,11 @@
       "label": "UoWM Management Science and Technology",
       "type": "rss",
       "url": "https://mst.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Accounting and Finance",
+      "type": "rss",
+      "url": "https://accfin.uowm.gr/feed/"
     }
   ]
 }
