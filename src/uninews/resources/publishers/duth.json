@@ -1,0 +1,85 @@
+{
+  "publisher": "Democritus University of Thrace",
+  "category": "university",
+  "defaults": {
+    "type": "html",
+    "item_selector": "article.post-news.post-news-wide",
+    "title_selector": "h4 a",
+    "date_selector": ".post-news-meta span.small",
+    "page_url": "{url}?pn={page}"
+  },
+  "sources": [
+    {
+      "label": "DUTH Announcements",
+      "url": "https://duth.gr/nea/anakoinoseis/",
+      "pages": 3
+    },
+    {
+      "label": "DUTH Events",
+      "url": "https://duth.gr/nea/ekdiloseis/",
+      "pages": 1
+    },
+    {
+      "label": "DUTH Press Releases",
+      "url": "https://duth.gr/nea/deltia-typou/",
+      "pages": 2
+    },
+    {
+      "label": "DUTH Proclamations",
+      "url": "https://duth.gr/category/prokirikseis/"
+    },
+    {
+      "label": "DUTH Invitations to show interest",
+      "url": "https://duth.gr/nea/proskliseis-ekdilwseis-endiaferontos/"
+    },
+    {
+      "label": "DUTH Law School",
+      "url": "https://law.duth.gr/fisrtpage-2/anakoinoseis/"
+    },
+    {
+      "label": "DUTH Department of Production and Management Engineering",
+      "url": "https://pme.duth.gr/category/sec-news/"
+    },
+    {
+      "label": "DUTH School of Architecture",
+      "url": "https://arch.duth.gr/#1444333172160-08cd5aa9-ec091c9d-1602"
+    },
+    {
+      "label": "DUTH Department of Electrical and Computer Engineering",
+      "url": "https://www.ee.duth.gr"
+    },
+    {
+      "label": "DUTH Department of Environmental Engineering",
+      "url": "https://env.duth.gr"
+    },
+    {
+      "label": "DUTH School of Civil Engineering",
+      "url": "https://civil.duth.gr/#1444333172160-08cd5aa9-ec091c9d-1602"
+    },
+    {
+      "label": "School of Humanities",
+      "url": "https://hs.duth.gr"
+    },
+    {
+      "label": "DUTH Department of Management Science & Technology",
+      "url": "https://www.mst.duth.gr/index.php/category/anakoinoseis-grammateias-gr/"
+    },
+    {
+      "label": "DUTH Department of Accounting and Finance",
+      "url": "https://af.duth.gr/anakoinoseis/genikes/"
+    },
+    {
+      "label": "DUTH Department of Physical Education and Sport Science",
+      "url": "https://phyed.duth.gr/"
+    },
+    {
+      "label": "DUTH Department of Ergotherapy",
+      "url": "https://ot.duth.gr/news/"
+    },
+    {
+      "label": "DUTH Law School",
+      "url": "https://law.duth.gr/fisrtpage-2/anakoinoseis/"
+    }
+    
+  ]
+}
