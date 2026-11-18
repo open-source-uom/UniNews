@@ -49,11 +49,8 @@
     },
     {
       "label": "UoWM Product and Systems Design Engineering - News",
-      "url": "https://ide.uowm.gr/en/category/news/",
-      "item_selector": "article.type-post, article.post",
-      "title_selector": "h2 a, .entry-title a",
-      "date_selector": "time, .entry-date, .posted-on",
-      "summary_selector": ".entry-summary, .entry-content"
+      "type": "rss",
+      "url": "https://ide.uowm.gr/feed/"
     },
     {
       "label": "UoWM Early Childhood Education",
@@ -65,12 +62,8 @@
     },
     {
       "label": "UoWM Computer Science",
-      "url": "https://cs.uowm.gr/en/home-page/",
-      "item_selector": ".latest-news-item",
-      "title_selector": ".latest-news-title a, h3 a",
-      "date_selector": ".latest-news-date, time, .posted-on",
-      "summary_selector": ".latest-news-text-content p, .latest-news-excerpt",
-      "pages": 1
+      "type": "rss",
+      "url": "https://cs.uowm.gr/feed/"
     },
     {
       "label": "UoWM Agriculture",
@@ -107,11 +100,8 @@
     },
     {
       "label": "UoWM Applied and Fine Arts",
-      "url": "https://eetf.uowm.gr/en/category/news/",
-      "item_selector": ".news-mini-wrap.type-post, .news-mini-wrap",
-      "title_selector": "h1 a, h2 a, .entry-title a",
-      "date_selector": "time, .news-meta",
-      "summary_selector": ".news-summary, .entry-summary, .entry-content"
+      "type": "rss",
+      "url": "https://eetf.uowm.gr/feed/"
     },
     {
       "label": "UoWM Occupational Therapy",
@@ -127,6 +117,51 @@
       "title_selector": "h2 a, .entry-title a",
       "date_selector": "time, .entry-date, .posted-on",
       "summary_selector": ".entry-summary, .entry-content"
+    },
+    {
+      "label": "UoWM Mechanical Engineering",
+      "type": "rss",
+      "url": "https://mech.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Primary Education",
+      "type": "rss",
+      "url": "https://eled.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Communication and Digital Media",
+      "type": "rss",
+      "url": "https://cdm.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Psychology",
+      "type": "rss",
+      "url": "https://psy.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Mathematics",
+      "type": "rss",
+      "url": "https://math.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Management Science and Technology",
+      "type": "rss",
+      "url": "https://mst.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Accounting and Finance",
+      "type": "rss",
+      "url": "https://accfin.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Economics",
+      "type": "rss",
+      "url": "https://econ.uowm.gr/feed/"
+    },
+    {
+      "label": "UoWM Statistics and Insurance Science",
+      "type": "rss",
+      "url": "https://stat.uowm.gr/feed/"
     }
   ]
 }
