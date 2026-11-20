@@ -4,56 +4,56 @@
   "defaults": {
     "type": "html",
     "item_selector": "article.post-news.post-news-wide",
-    "title_selector": "h4 a",
+    "title_selector": "h2 a",
     "date_selector": ".post-news-meta span.small",
     "page_url": "{url}?pn={page}"
   },
   "sources": [
     {
-      "label": "DUTH Announcements",
+      "label": "Announcements",
       "url": "https://duth.gr/nea/anakoinoseis/",
       "pages": 3
     },
     {
-      "label": "DUTH Events",
+      "label": "Events",
       "url": "https://duth.gr/nea/ekdiloseis/",
       "pages": 1
     },
     {
-      "label": "DUTH Press Releases",
+      "label": "Press Releases",
       "url": "https://duth.gr/nea/deltia-typou/",
       "pages": 2
     },
     {
-      "label": "DUTH Proclamations",
+      "label": "Proclamations",
       "url": "https://duth.gr/category/prokirikseis/"
     },
     {
-      "label": "DUTH Invitations to show interest",
+      "label": "Invitations to show interest",
       "url": "https://duth.gr/nea/proskliseis-ekdilwseis-endiaferontos/"
     },
     {
-      "label": "DUTH Law School",
+      "label": "Law School",
       "url": "https://law.duth.gr/fisrtpage-2/anakoinoseis/"
     },
     {
-      "label": "DUTH Department of Production and Management Engineering",
+      "label": "Department of Production and Management Engineering",
       "url": "https://pme.duth.gr/category/sec-news/"
     },
     {
-      "label": "DUTH School of Architecture",
+      "label": "School of Architecture",
       "url": "https://arch.duth.gr/#1444333172160-08cd5aa9-ec091c9d-1602"
     },
     {
-      "label": "DUTH Department of Electrical and Computer Engineering",
+      "label": "Department of Electrical and Computer Engineering",
       "url": "https://www.ee.duth.gr"
     },
     {
-      "label": "DUTH Department of Environmental Engineering",
+      "label": "Department of Environmental Engineering",
       "url": "https://env.duth.gr"
     },
     {
-      "label": "DUTH School of Civil Engineering",
+      "label": "School of Civil Engineering",
       "url": "https://civil.duth.gr/#1444333172160-08cd5aa9-ec091c9d-1602"
     },
     {
@@ -61,24 +61,93 @@
       "url": "https://hs.duth.gr"
     },
     {
-      "label": "DUTH Department of Management Science & Technology",
+      "label": "Department of Management Science & Technology",
       "url": "https://www.mst.duth.gr/index.php/category/anakoinoseis-grammateias-gr/"
     },
     {
-      "label": "DUTH Department of Accounting and Finance",
+      "label": "Department of Accounting and Finance",
       "url": "https://af.duth.gr/anakoinoseis/genikes/"
     },
     {
-      "label": "DUTH Department of Physical Education and Sport Science",
+      "label": "Department of Physical Education and Sport Science",
       "url": "https://phyed.duth.gr/"
     },
     {
-      "label": "DUTH Department of Ergotherapy",
+      "label": "Department of Ergotherapy",
       "url": "https://ot.duth.gr/news/"
     },
     {
-      "label": "DUTH Law School",
-      "url": "https://law.duth.gr/fisrtpage-2/anakoinoseis/"
+      "label": "Pedagogical Department of Primary Education",
+      "url": "https://eled.duth.gr/"
+    },
+    {
+      "label": "Psycology Department",
+      "url": "https://psy.duth.gr/"
+    },
+    {
+      "label": "Department of Preschool Education Sciences",
+      "url": "https://www.psed.duth.gr/en/home-page/"
+    },
+    {
+      "label": "Department of Preschool Education Sciences",
+      "url": "https://www.psed.duth.gr/en/home-page/"
+    },
+    {
+      "label": "Department of Viticulture and Oenology",
+      "url": "https://vo.duth.gr/"
+    },
+    {
+      "label": "Department of Rural Development",
+      "url": "https://agro.duth.gr/"
+    },
+    {
+      "label": "Department of Natural Environment and Climate Resilience",
+      "url": "https://neclir.duth.gr/?page_id=370"
+    },
+    {
+      "label": "Department of Forestry and Environmental and Natural Resources Management",
+      "url": "https://fmenr.duth.gr/"
+    },
+    {
+      "label": "Nursing Department",
+      "url": "https://nurs.duth.gr/announcements/"
+    },
+    {
+      "label": "Department of Molecular Biology and Genetics",
+      "url": "https://mbg.duth.gr/anakoinoseis/genikes/",
+      "pages": 3
+    },
+    {
+      "label": "Medical Department",
+      "url": "https://med.duth.gr/blog-2/blog-grid/"
+    },
+    {
+      "label": "Chemistry Department",
+      "url": "https://chem.duth.gr/"
+    },
+    {
+      "label": "Physics Department",
+      "url": "https://physics.duth.gr/?cat=13"
+    },
+    {
+      "label": "Computer Science Department",
+      "url": "https://cs.duth.gr/announcements.xhtml"
+    },
+    {
+      "label": "Department of Social Policy",
+      "url": "https://sp.duth.gr/"
+    },
+    {
+      "label": "Department of Social Work",
+      "url": "https://sw.duth.gr/anakoinoseis/oles-oi-anakoinoseis/"
+    },
+    {
+      "label": "Department of Economical Sciences",
+      "url": "https://econ.duth.gr/announcement/%ce%b1%ce%bd%ce%b1%ce%ba%ce%bf%ce%b9%ce%bd%cf%8e%cf%83%ce%b5%ce%b9%cf%82-%cf%86%ce%bf%ce%b9%cf%84%ce%b7%cf%84%cf%8e%ce%bd/"
+    },
+    {
+      "label": "Department of Political Science",
+      "url": "https://polsci.duth.gr/"
     }
     
   ]
