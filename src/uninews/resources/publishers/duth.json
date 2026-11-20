@@ -3,7 +3,7 @@
   "category": "university",
   "defaults": {
     "type": "html",
-    "item_selector": "article.post-news.post-news-wide",
+    "item_selector": "li",
     "title_selector": "h2 a",
     "date_selector": ".post-news-meta span.small",
     "page_url": "{url}?pn={page}"
@@ -12,25 +12,30 @@
     {
       "label": "Announcements",
       "url": "https://duth.gr/nea/anakoinoseis/",
-      "pages": 3
+      "pages": 3,
+      "title_selector": "h4 a"
     },
     {
       "label": "Events",
       "url": "https://duth.gr/nea/ekdiloseis/",
-      "pages": 1
+      "pages": 1,
+      "title_selector": "h4 a"
     },
     {
       "label": "Press Releases",
       "url": "https://duth.gr/nea/deltia-typou/",
-      "pages": 2
+      "pages": 2,
+      "title_selector": "h4 a"
     },
     {
       "label": "Proclamations",
-      "url": "https://duth.gr/category/prokirikseis/"
+      "url": "https://duth.gr/category/prokirikseis/",
+      "title_selector": "h4 a"
     },
     {
       "label": "Invitations to show interest",
-      "url": "https://duth.gr/nea/proskliseis-ekdilwseis-endiaferontos/"
+      "url": "https://duth.gr/nea/proskliseis-ekdilwseis-endiaferontos/",
+      "title_selector": "h4 a"
     },
     {
       "label": "Law School",
