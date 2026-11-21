@@ -10,6 +10,14 @@
     "summary_selector":"p"
   },
   "sources": [
+{
+      "label": "Computer Science Department",
+      "type":"xhtml",
+      "url": "https://cs.duth.gr/announcements.xhtml",
+      "item_selector": "td div.col-12",
+      "title_selector":"a h1.newsblock-title-under",
+      "date_selector": "span"
+    },
     {
       "label": "Announcements",
       "url": "https://duth.gr/nea/anakoinoseis/",
@@ -87,9 +95,8 @@
     },
     {
       "label": "Department of Accounting and Finance",
-      "url": "https://af.duth.gr/anakoinoseis/genikes/",
-      "item_selector":"li.fusion-layout-column.post-card",
-      "title_selector":"div.fusion-title h4"
+      "type": "rss",
+      "url": "https://af.duth.gr/anakoinoseis/genikes/feed/"
     },
     {
       "label": "Department of Physical Education and Sport Science",
@@ -112,9 +119,8 @@
     },
     {
       "label": "Psycology Department",
-      "url": "https://psy.duth.gr/",
-      "item_selector": "li.fusion-layout-column",
-      "title_selector":"h6.fusion-title-heading"
+      "type":"rss",
+      "url": "https://psy.duth.gr/feed/"
     },
     {
       "label": "Department of Education Sciences in Early Childhood",
@@ -124,9 +130,8 @@
     },
     {
       "label": "Department of Viticulture and Oenology",
-      "url": "https://vo.duth.gr/announcement-category/genikes-anakoinoseis/",
-      "item_selector": "li.fusion-layout-column",
-      "title_selector":"h4"
+      "type":"rss",
+      "url": "https://vo.duth.gr/announcement-category/genikes-anakoinoseis/feed/"      
     },
     {
       "label": "Department of Agricultural Development",
@@ -160,17 +165,13 @@
     },
     {
       "label": "Medical Department",
-      "url": "https://med.duth.gr/blog-2/blog-grid/",
-      "item_selector": "div.bt_bb_grid_item",
-      "title_selector":"h5 a",
-      "summary_selector": "div.bt_bb_grid_item_post_excerpt"
+      "type": "rss",
+      "url": "https://med.duth.gr/feed/" 
     },
     {
       "label": "Chemistry Department",
-      "url": "https://chem.duth.gr/%CE%B1%CE%BD%CE%B1%CE%BA%CE%BF%CE%B9%CE%BD%CF%8E%CF%83%CE%B5%CE%B9%CF%82/",
-      "item_selector": "li.fusion-layout-column",
-      "image_selector": "li.fusion-layout-column div.fusion-column-wrapper",
-      "title_selector":"h6.fusion-title-heading"
+      "type": "rss",
+      "url": "https://chem.duth.gr/feed/"
     },
     {
       "label": "Physics Department",
@@ -200,10 +201,8 @@
     },
     {
       "label": "Department of Economical Sciences",
-      "url": "https://econ.duth.gr/announcement/%ce%b1%ce%bd%ce%b1%ce%ba%ce%bf%ce%b9%ce%bd%cf%8e%cf%83%ce%b5%ce%b9%cf%82-%cf%86%ce%bf%ce%b9%cf%84%ce%b7%cf%84%cf%8e%ce%bd/",
-      "item_selector": "li.fusion-layout-column ",
-      "title_selector":"div.fusion-title h6",
-      "image_selector": "span img"
+      "type":"rss",
+      "url": "https://econ.duth.gr/feed/"
     },
     {
       "label": "Department of Political Science",
