@@ -10,14 +10,7 @@
     "summary_selector":"p"
   },
   "sources": [
-{
-      "label": "Computer Science Department",
-      "type":"xhtml",
-      "url": "https://cs.duth.gr/announcements.xhtml",
-      "item_selector": "td div.col-12",
-      "title_selector":"a h1.newsblock-title-under",
-      "date_selector": "span"
-    },
+
     {
       "label": "Announcements",
       "url": "https://duth.gr/nea/anakoinoseis/",
@@ -48,9 +41,8 @@
     },
     {
       "label": "Law School",
-      "url": "https://law.duth.gr/fisrtpage-2/anakoinoseis/",
-      "item_selector": "div.post-title",
-      "title_selector":"h5 a"
+      "type":"rss",
+      "url": "https://law.duth.gr/feed/"
     },
     {
       "label": "Department of Production and Management Engineering",
@@ -96,7 +88,7 @@
     {
       "label": "Department of Accounting and Finance",
       "type": "rss",
-      "url": "https://af.duth.gr/anakoinoseis/genikes/feed/"
+      "url": "https://af.duth.gr/feed/"
     },
     {
       "label": "Department of Physical Education and Sport Science",
@@ -182,8 +174,8 @@
     {
       "label": "Computer Science Department",
       "url": "https://cs.duth.gr/announcements.xhtml",
-      "item_selector": "td div.col-12",
-      "title_selector":"a h1.newsblock-title-under",
+      "item_selector": "td",
+      "title_selector":"a",
       "date_selector": "span"
     },
     {
