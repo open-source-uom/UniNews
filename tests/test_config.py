@@ -22,7 +22,7 @@ def test_saved_settings_win_and_new_defaults_appear():
     settings = config.load_settings()
 
     assert settings["theme"] == "dark"
-    assert settings["max_cached_articles"] == 500      # default filled in
+    assert settings["max_cached_articles"] == 1000      # default filled in
 
 
 def test_greek_keywords_survive_a_round_trip():

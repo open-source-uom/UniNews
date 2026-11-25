@@ -37,7 +37,7 @@ DEFAULT_SETTINGS = {
     "page_size": 12,
     "refresh_on_startup": True,
     "refresh_interval_minutes": 0,          # 0 = only when asked
-    "max_cached_articles": 500,
+    "max_cached_articles": 1000,
     "home_university": "",                  # "" = UniOS profile, "all" = All sources
 }
 

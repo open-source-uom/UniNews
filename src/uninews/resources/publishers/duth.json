@@ -9,185 +9,171 @@
     "image_selector": "div.fusion-column-has-bg-image, img",
     "summary_selector":"p"
   },
-  "sources": [
-    
+  "sources": [ 
     {
-      "label": "DUTH Announcements",
-      "url": "https://duth.gr/nea/anakoinoseis/",
-      "pages": 3,
-      "title_selector": "h4 a"
+      "label": "DUoT Main News",
+      "type" : "rss",
+      "url": "https://duth.gr/feed/"
     },
     {
-      "label": "DUTH Events",
-      "url": "https://duth.gr/nea/ekdiloseis/",
-      "pages": 1,
-      "title_selector": "h4 a"
-    },
-    {
-      "label": "DUTH Press Releases",
-      "url": "https://duth.gr/nea/deltia-typou/",
-      "pages": 2,
-      "title_selector": "h4 a"
-    },
-    {
-      "label": "DUTH Proclamations",
+      "label": "DUoT Proclamations",
       "type":"rss",
       "url": "https://duth.gr/category/prokirikseis/feed/"
     },
     {
-      "label": "DUTH Invitations to show interest",
-      "url": "https://duth.gr/nea/proskliseis-ekdilwseis-endiaferontos/",
-      "title_selector": "h4 a"
-    },
-    {
-      "label": "DUTH Law School",
+      "label": "DUoT Law School",
       "type":"rss",
       "url": "https://law.duth.gr/feed/"
     },
     {
-      "label": "DUTH Department of Production and Management Engineering",
+      "label": "DUoT Department of Production and Management Engineering",
       "type": "rss",
       "url": "https://pme.duth.gr/feed/"
     },
     {
-      "label": "DUTH School of Architecture",
+      "label": "DUoT School of Architecture",
       "type":"rss",
       "url": "https://arch.duth.gr/feed/"
     },
     {
-      "label": "DUTH Department of Electrical and Computer Engineering",
+      "label": "DUoT Department of Electrical and Computer Engineering",
       "url": "https://www.ee.duth.gr",
       "item_selector": "article",
-      "title_selector":"h2 a"
+      "title_selector":"h2 a",
+      "date_selector": "div.fusion-date-box"
     },
     {
-      "label": "DUTH Department of Environmental Engineering",
+      "label": "DUoT Department of Environmental Engineering",
       "type": "rss",
       "url": "https://env.duth.gr/feed/"
-      
     },
     {
-      "label": "DUTH School of Civil Engineering",
+      "label": "DUoT School of Civil Engineering",
       "type": "rss",
       "url": "https://civil.duth.gr/feed/"
     },
     {
-      "label": "DUTH School of Humanities",
+      "label": "DUoT School of Humanities",
       "type": "rss",
       "url": "https://hs.duth.gr/feed/"
     },
     {
-      "label": "DUTH Department of Management Science & Technology",
+      "label": "DUoT Department of Management Science & Technology",
       "url": "https://www.mst.duth.gr/index.php/category/anakoinoseis-grammateias-gr/",
       "item_selector": "article",
       "title_selector":"h1 a",
+      "date_selector": "li.meta-date",
       "pages": 2      
     },
     {
-      "label": "DUTH Department of Accounting and Finance",
+      "label": "DUoT Department of Accounting and Finance",
       "type": "rss",
       "url": "https://af.duth.gr/feed/"
     },
     {
-      "label": "DUTH Department of Physical Education and Sport Science",
+      "label": "DUoT Department of Physical Education and Sport Science",
       "url": "https://phyed.duth.gr/",
       "item_selector": "article",
       "title_selector":"h3 a",
+      "date_selector": "time",
       "summary_selector": "div.post_content" 
     },
     {
-      "label": "DUTH Department of Ergotherapy",
+      "label": "DUoT Department of Ergotherapy",
       "type": "rss",
       "url": "https://ot.duth.gr/feed/"
     },
     {
-      "label": "DUTH Pedagogical Department of Primary Education",
+      "label": "DUoT Pedagogical Department of Primary Education",
       "type":"rss",
       "url": "https://eled.duth.gr/feed/"
     },
     {
-      "label": "DUTH Psycology Department",
+      "label": "DUoT Psycology Department",
       "type":"rss",
       "url": "https://psy.duth.gr/feed/"
     },
     {
-      "label": "DUTH Department of Education Sciences in Early Childhood",
+      "label": "DUoT Department of Education Sciences in Early Childhood",
       "type":"rss",
       "url": "https://www.psed.duth.gr/feed/"
     },
     {
-      "label": "DUTH Department of Viticulture and Oenology",
+      "label": "DUoT Department of Viticulture and Oenology",
       "type":"rss",
       "url": "https://vo.duth.gr/announcement-category/genikes-anakoinoseis/feed/"      
     },
     {
-      "label": "DUTH Department of Agricultural Development",
+      "label": "DUoT Department of Agricultural Development",
       "type":"rss",
       "url": "https://agro.duth.gr/feed/"
     },
     {
-      "label": "DUTH Department of Natural Environment and Climate Resilience",
+      "label": "DUoT Department of Natural Environment and Climate Resilience",
       "url": "https://neclir.duth.gr/?page_id=396",
       "item_selector": "div.dpt-entry-wrapper",
       "title_selector":"h3 a",
       "image_selector": "img"
     },
     {
-      "label": "DUTH Department of Forestry and Environmental and Natural Resources Management",
+      "label": "DUoT Department of Forestry and Environmental and Natural Resources Management",
       "type":"rss",
       "url": "https://fmenr.duth.gr/feed/"
     },
     {
-      "label": "DUTH Nursing Department",
-      "url": "https://nurs.duth.gr/announcements/"
+      "label": "DUoT Nursing Department",
+      "type": "rss",
+      "url": "https://nurs.duth.gr/feed/"
     },
     {
-      "label": "DUTH Department of Molecular Biology and Genetics",
+      "label": "DUoT Department of Molecular Biology and Genetics",
       "type": "rss",
       "url": "https://mbg.duth.gr/feed/"
       
     },
     {
-      "label": "DUTH Medical Department",
+      "label": "DUoT Medical Department",
       "type": "rss",
       "url": "https://med.duth.gr/feed/" 
     },
     {
-      "label": "DUTH Chemistry Department",
+      "label": "DUoT Chemistry Department",
       "type": "rss",
       "url": "https://chem.duth.gr/feed/"
     },
     {
-      "label": "DUTH Physics Department",
+      "label": "DUoT Physics Department",
       "url": "https://physics.duth.gr/?cat=13",
       "item_selector": "article",
-      "title_selector":"a.post-title"
+      "title_selector":"a.post-title",
+      "date_selector": "a.post-meta-date"
+
     },
     {
-      "label": "DUTH Computer Science Department",
+      "label": "DUoT Computer Science Department",
       "url": "https://cs.duth.gr/announcements.xhtml",
       "item_selector": "td",
       "title_selector":"a",
       "date_selector": "span"
     },
     {
-      "label": "DUTH Department of Social Policy",
+      "label": "DUoT Department of Social Policy",
       "type":"rss",
       "url": "https://sp.duth.gr/feed/"
     },
     {
-      "label": "DUTH Department of Social Work",
+      "label": "DUoT Department of Social Work",
       "type":"rss",
       "url": "https://sw.archive.duth.gr/anakoinoseis/feed/"
       
     },
     {
-      "label": "DUTH Department of Economical Sciences",
+      "label": "DUoT Department of Economical Sciences",
       "type":"rss",
       "url": "https://econ.duth.gr/feed/"
     },
     {
-      "label": "DUTH Department of Political Science",
+      "label": "DUoT Department of Political Science",
       "type":"rss",
       "url": "https://polsci.duth.gr/feed/"
     }
